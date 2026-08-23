@@ -1,1 +1,0 @@
-- [SBI Network design decisions](sbi-network-decisions.md) — brand, architecture, key component patterns, and content for the SBI Network artifact. Read before any work on artifacts/sbi-network.

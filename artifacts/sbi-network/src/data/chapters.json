@@ -1,0 +1,12 @@
+[
+  {
+    "id": "ebsbi",
+    "name": "East Brunswick SBI",
+    "abbreviation": "EBSBI",
+    "location": { "lat": 40.438555, "lng": -74.392598 },
+    "radius": "5 miles (founder-decided, placeholder)",
+    "services": ["Websites", "Promo Videos", "GBP Optimization", "Social Media"],
+    "contact": "ebsbi.official@gmail.com",
+    "description": "Serving East Brunswick and surrounding areas"
+  }
+]

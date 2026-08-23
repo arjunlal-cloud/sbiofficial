@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "SBI Network"
+description = "A website for the Student Business Initiative (SBI) Network — a student-run organization that connects local businesses with student chapters. The site includes pages for businesses to join, students to start a chapter, team profiles, and the organization's story, plus an interactive map of chapters across the country."
+version = "1.0.0"
+id = "artifacts/sbi-network"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22661
+
+[services.development]
+run = "pnpm --filter @workspace/sbi-network run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/sbi-network", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/sbi-network/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22661"
+BASE_PATH = "/"
