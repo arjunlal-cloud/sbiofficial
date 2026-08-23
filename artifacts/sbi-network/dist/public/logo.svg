@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none" role="img" aria-label="SBI Network">
+  <!-- "SBI" bold wordmark -->
+  <text x="0" y="28" font-family="'Space Grotesk', 'General Sans', system-ui, sans-serif" font-size="30" font-weight="700" letter-spacing="-1" fill="#eef3ff">SBI</text>
+  <!-- Gold accent growth-line / arrow mark -->
+  <g transform="translate(86,0)">
+    <!-- vertical base -->
+    <rect x="0" y="22" width="2.5" height="12" rx="1.25" fill="#c09b2d"/>
+    <!-- diagonal rising line -->
+    <line x1="1.25" y1="22" x2="16" y2="8" stroke="#c09b2d" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- arrowhead -->
+    <polyline points="10,6 16,8 14,14" stroke="#c09b2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <!-- "Network" in gold -->
+  <text x="108" y="28" font-family="'Space Grotesk', 'General Sans', system-ui, sans-serif" font-size="30" font-weight="500" letter-spacing="-0.5" fill="#c09b2d">Network</text>
+</svg>
