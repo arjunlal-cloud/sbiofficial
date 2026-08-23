@@ -1,54 +1,45 @@
 # SBI Network
 
-SBI Network connects student-led chapters with local small businesses for free
-digital services, while giving future chapter leaders a clear path to launch
-their own chapter.
+SBI Network connects student-led chapters with local small businesses for free digital services, while giving ambitious students a clear path to connect, learn, lead chapters, and help one another grow.
 
-## Requirements
+**Live website:** [https://sbi-network.replit.app](https://sbi-network.replit.app)
 
-- Node.js 20 or newer
-- pnpm 10 or newer
+## Stack
 
-## Local setup
+React, Vite, Tailwind CSS, React Router, and Leaflet.
 
-```bash
-pnpm install
-pnpm --filter @workspace/sbi-network run dev
-```
+## Run locally
 
-The website runs through the Vite development server. To run the optional API
-server used by the Ask SBI concierge in a second terminal:
+Requires Node.js 20 or newer.
 
 ```bash
-pnpm --filter @workspace/api-server run dev
+npm install
+npm run dev
 ```
 
-The API server needs the Replit-managed OpenAI integration environment
-variables when the concierge is enabled. Keep those values in local
-environment configuration; never commit them.
+Open the local address Vite prints in the terminal.
 
-## Useful commands
+## Build for production
 
 ```bash
-pnpm run typecheck
-pnpm run build
-pnpm --filter @workspace/sbi-network run build
+npm run build
+npm run preview
 ```
 
-The public-facing React + Vite site lives in `artifacts/sbi-network`. Shared API
-packages are in `lib/`, and the optional Express API is in
-`artifacts/api-server`.
+## Project structure
 
-## Public repository checklist
+```text
+public/       Static images, logos, and team photos
+src/
+  components/ Shared UI and page sections
+  data/       Chapter, glossary, and SOP content
+  pages/      Site pages and routes
+```
 
-Before changing the GitHub repository to public:
+## Ask SBI concierge
 
-1. Confirm the current branch contains no credentials, environment files,
-   private contact data, or unapproved media.
-2. Review the complete Git history and remove any sensitive content with a
-   history rewrite before publishing.
-3. Rotate any credential that may ever have been committed, even if it was
-   later deleted.
-4. Confirm team portraits, forms, contact details, and other public-facing
-   content have the required approval.
-5. Change the repository visibility in GitHub only after the checks above pass.
+The site includes an optional Ask SBI concierge. When no compatible API is connected, it uses its built-in answers so the standalone site remains usable without keys or secret configuration.
+
+## Deploying
+
+`vercel.json` includes an SPA rewrite so direct links such as `/chapter` and `/business` work on Vercel. Other static hosts should be configured to serve `index.html` for unknown routes.
