@@ -84,6 +84,9 @@ export default function Business() {
                         <span className="font-mono text-[10px] text-muted tracking-widest uppercase">{c.abbreviation}</span>
                       </div>
                       <p className="text-xs text-ink-soft mb-4">{c.radius}</p>
+                       {c.leader && (
+                         <p className="text-xs text-ink-soft mb-4">Chapter lead: <span className="text-ink">{c.leader}</span></p>
+                       )}
                       
                       <div className="mb-6">
                         <span className="font-mono text-[10px] text-gold-500 tracking-widest uppercase block mb-2">Services</span>
@@ -94,12 +97,18 @@ export default function Business() {
                         </div>
                       </div>
                       
-                      <a 
-                        href={`mailto:${c.contact}`}
-                        className="inline-flex w-full justify-center items-center rounded bg-white/5 px-4 py-3 text-xs font-mono tracking-widest uppercase text-ink transition-colors hover:bg-white/10 hover:text-gold-400"
-                      >
-                        Contact Chapter
-                      </a>
+                       {c.contact ? (
+                         <a 
+                           href={`mailto:${c.contact}`}
+                           className="inline-flex w-full justify-center items-center rounded bg-white/5 px-4 py-3 text-xs font-mono tracking-widest uppercase text-ink transition-colors hover:bg-white/10 hover:text-gold-400"
+                         >
+                           Contact Chapter
+                         </a>
+                       ) : (
+                         <span className="inline-flex w-full justify-center rounded bg-white/5 px-4 py-3 text-center text-xs font-mono tracking-widest uppercase text-muted">
+                           Contact details coming soon
+                         </span>
+                       )}
                     </div>
                   </FadeIn>
                 ))}

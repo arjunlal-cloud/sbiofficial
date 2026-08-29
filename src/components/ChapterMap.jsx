@@ -62,12 +62,24 @@ export default function ChapterMap() {
                   {c.name} <span className="font-mono text-xs text-muted">({c.abbreviation})</span>
                 </p>
                 <p className="mt-2 text-[13px] text-ink-soft leading-relaxed">{c.description}</p>
+                {c.leader && (
+                  <>
+                    <p className="mt-3 text-[10px] font-mono tracking-widest text-gold-500 uppercase">Chapter Lead</p>
+                    <p className="mt-1 text-sm text-ink-soft">{c.leader}</p>
+                  </>
+                )}
                 <p className="mt-3 text-[10px] font-mono tracking-widest text-gold-500 uppercase">Services</p>
                 <p className="mt-1 text-sm text-ink-soft">{c.services.join(' · ')}</p>
-                <p className="mt-3 text-[10px] font-mono tracking-widest text-gold-500 uppercase">Contact</p>
-                <a href={`mailto:${c.contact}`} className="mt-1 inline-block text-sm text-ink hover:text-gold-400 underline decoration-white/20 hover:decoration-gold-400 transition-colors">
-                  {c.contact}
-                </a>
+                {c.contact ? (
+                  <>
+                    <p className="mt-3 text-[10px] font-mono tracking-widest text-gold-500 uppercase">Contact</p>
+                    <a href={`mailto:${c.contact}`} className="mt-1 inline-block text-sm text-ink hover:text-gold-400 underline decoration-white/20 hover:decoration-gold-400 transition-colors">
+                      {c.contact}
+                    </a>
+                  </>
+                ) : (
+                  <p className="mt-3 text-xs italic text-muted">Contact details coming soon.</p>
+                )}
               </div>
             </Popup>
           </Marker>

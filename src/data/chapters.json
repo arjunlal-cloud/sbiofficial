@@ -8,5 +8,16 @@
     "services": ["Websites", "Promo Videos", "GBP Optimization", "Social Media"],
     "contact": "ebsbi.official@gmail.com",
     "description": "Serving East Brunswick and surrounding areas"
+  },
+  {
+    "id": "gjsbi",
+    "name": "Guadalajara, Mexico",
+    "abbreviation": "GJSBI",
+    "leader": "Pedro Baltazar",
+    "location": { "lat": 20.6597, "lng": -103.3496 },
+    "radius": "5 miles (founder-decided, placeholder)",
+    "services": ["Websites", "Promo Videos", "GBP Optimization", "Social Media"],
+    "contact": null,
+    "description": "Serving Guadalajara and surrounding areas"
   }
 ]

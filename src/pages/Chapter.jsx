@@ -143,6 +143,9 @@ export default function Chapter() {
                         <span className="font-mono text-[10px] text-muted tracking-widest uppercase">{c.abbreviation}</span>
                       </div>
                       <p className="text-xs text-ink-soft mb-2">{c.description}</p>
+                       {c.leader && (
+                         <p className="mb-2 text-xs text-ink-soft">Chapter lead: <span className="text-ink">{c.leader}</span></p>
+                       )}
                       
                       <div className="mb-4">
                         <span className="font-mono text-[10px] text-gold-500 uppercase tracking-widest">{c.radius}</span>

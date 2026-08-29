@@ -209,7 +209,7 @@ export default function Landing() {
           className="flex gap-16 px-8 items-center"
         >
           {Array(4).fill([
-            "1 Chapter Live", "5+ Businesses Served", "10+ Students Involved", "100% Free", "Est. 2025"
+            "3 Chapters Live", "5+ Businesses Served", "15+ Students Involved", "100% Free", "Est. 2025"
           ]).flat().map((text, i) => (
             <span key={i} className="flex items-center gap-16">
               {text}
@@ -227,8 +227,8 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <StaggerContainer className="grid grid-cols-2 gap-y-16 gap-x-8 md:grid-cols-4">
             <FadeIn stagger><AnimatedCounter value="5+" label="Businesses Helped" /></FadeIn>
-            <FadeIn stagger><AnimatedCounter value="1" label="Chapters Live" /></FadeIn>
-            <FadeIn stagger><AnimatedCounter value="10+" label="Students Involved" /></FadeIn>
+            <FadeIn stagger><AnimatedCounter value="3" label="Chapters Live" /></FadeIn>
+            <FadeIn stagger><AnimatedCounter value="15+" label="Students Involved" /></FadeIn>
             <FadeIn stagger><AnimatedCounter value="4" label="Services Offered" /></FadeIn>
           </StaggerContainer>
         </div>
