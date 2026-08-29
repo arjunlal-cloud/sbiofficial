@@ -78,7 +78,7 @@ export default function ChapterMap() {
                     </a>
                   </>
                 ) : (
-                  <p className="mt-3 text-xs italic text-muted">Contact details coming soon.</p>
+                  <p className="mt-3 text-xs italic text-muted">Chapter contact details will be added as the local team comes online.</p>
                 )}
               </div>
             </Popup>

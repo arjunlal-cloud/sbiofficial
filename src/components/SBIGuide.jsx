@@ -167,7 +167,7 @@ export default function SBIGuide() {
               ))}
               {capped && (
                 <p className="px-1 text-center text-[11px] text-muted">
-                  Session limit reached. Email{' '}
+                  Session limit reached. Email SBI&apos;s current network contact at{' '}
                   <a href="mailto:ebsbi.official@gmail.com" className="text-gold-300 hover:text-gold-200">
                     ebsbi.official@gmail.com
                   </a>{' '}

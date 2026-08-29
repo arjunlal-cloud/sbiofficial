@@ -77,7 +77,7 @@ export default function Layout() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="ml-3 rounded-xl bg-gold-500 px-4 py-2.5 text-xs font-mono uppercase tracking-widest text-canvas transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
             >
-              Get Started
+              Business Support
             </Link>
             <Link
               to="/about#donate"
@@ -113,7 +113,7 @@ export default function Layout() {
               to="/business"
               className="mt-2 text-center rounded px-4 py-2.5 text-xs font-mono uppercase tracking-widest text-canvas bg-gold-500 hover:bg-gold-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
             >
-              Get Started
+              Business Support
             </Link>
             <Link to="/about#donate" onClick={() => setIsMobileMenuOpen(false)} className="text-center font-mono text-xs uppercase tracking-widest text-gold-300 hover:text-gold-200">Donation preview</Link>
           </div>
@@ -126,7 +126,8 @@ export default function Layout() {
 
       <footer className="border-t border-white/5 bg-canvas-surface px-4 py-14 text-center text-sm text-ink-soft sm:py-16">
         <div className="mx-auto flex max-w-2xl flex-col items-center">
-        <p className="font-display text-xl font-medium tracking-tight text-ink">Student Business Initiative</p>
+        <p className="font-display text-xl font-medium tracking-tight text-ink">SBI · Student Business Initiative</p>
+        <p className="mt-2 text-xs leading-relaxed text-muted">Questions about SBI or a local chapter? Use the current network contact below.</p>
         <p className="mt-4 flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-2 break-words font-mono text-[10px] uppercase tracking-[0.12em] sm:text-xs sm:tracking-widest">
           <a
             href={`mailto:${CONTACT_EMAIL}`}

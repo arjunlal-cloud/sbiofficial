@@ -26,7 +26,7 @@ const sop = [
         </P>
         <P>
           The "SBI Network" is all of the independent chapters across the US working under the same
-          organization (Student Business Initiative).
+          organization, SBI (Student Business Initiative).
         </P>
         <H>Why do we exist?</H>
         <P>
@@ -93,7 +93,7 @@ const sop = [
         <H>HQ roles</H>
         <UL>
           <li>
-            <strong>Founder</strong> — runs the whole org, final say on everything, does your weekly check-ins
+            <strong>CEO</strong> — sets network direction, has final say on organization-wide decisions, and runs your weekly check-ins
           </li>
           <li>
             <strong>Quality Lead(s)</strong> — check your work before it goes live, make sure it hits the bar
@@ -156,11 +156,11 @@ const sop = [
         </P>
         <H>Getting Chartered</H>
         <P>
-          After that, you'll have a quick chat with the founder — basically a vibe check to make sure this is
+          After that, you'll have a quick chat with HQ leadership — basically a vibe check to make sure this is
           a good fit before anything's official.
         </P>
         <P>
-          Once the founder approves you, you're officially <G t="Chartered">chartered</G>, and the founder
+          Once HQ leadership approves you, you're officially <G t="Chartered">chartered</G>, and HQ leadership
           decides your chapter's radius. Only one chapter can exist per town — if your radius would overlap
           with a nearby chapter's, whichever chapter got chartered first keeps that area.
         </P>
@@ -201,7 +201,7 @@ const sop = [
             Lead your team to complete at least 2 projects per month (or you're on the 3-strike{' '}
             <G t="Deactivation">deactivation</G> clock)
           </li>
-          <li>Attend the weekly check-in with the founder</li>
+          <li>Attend the weekly check-in with HQ leadership</li>
           <li>Attend the monthly meeting with all HQ and chapter leaders</li>
           <li>
             Keep your team operating under SBI standards (quality, free services in-radius, branding
@@ -288,7 +288,7 @@ const sop = [
           what other chapters are doing.
         </P>
         <P>
-          And remember, your weekly check-in with the founder and the monthly meeting with everyone are
+          And remember, your weekly check-in with HQ leadership and the monthly meeting with everyone are
           built-in chances to raise anything that's going on.
         </P>
       </>

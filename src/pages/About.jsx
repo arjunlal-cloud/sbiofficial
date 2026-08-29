@@ -40,7 +40,7 @@ export default function About() {
               We didn't pitch it. We just started building websites for our neighbors and eventually had to give it a name.
             </blockquote>
             <p className="font-mono text-sm tracking-widest text-gold-500 uppercase mt-12">
-              — Da'El Kim, Founder
+              — Da'El Kim, CEO
             </p>
           </FadeIn>
         </div>
@@ -86,7 +86,7 @@ export default function About() {
                 <div className="grid grid-cols-2 gap-8 w-full">
                   <div>
                     <span className="block font-display text-6xl text-gold-500 mb-2">2</span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">Founders</span>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">Original team</span>
                   </div>
                   <div>
                     <span className="block font-display text-6xl text-gold-500 mb-2">1</span>
@@ -208,7 +208,7 @@ export default function About() {
         </FadeIn>
       </section>
 
-      <StickyMobileCta href="/business" label="Get Started" />
+       <StickyMobileCta href="/business" label="Find Business Support" />
     </div>
   )
 }

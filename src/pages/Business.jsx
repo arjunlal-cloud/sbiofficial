@@ -14,7 +14,7 @@ const steps = [
   },
   {
     title: 'Reach out to your local chapter',
-    body: "Find your area on the map below and click the pin — each chapter lists its services and contact info. Send a quick email describing your business, and the chapter leader will set up a conversation.",
+    body: "Find your area on the map below and click the pin — each available chapter lists its services and contact details when available. Send a quick email describing your business, and the local chapter team will set up a conversation.",
   },
   {
     title: 'No chapter in your area?',
@@ -106,7 +106,7 @@ export default function Business() {
                          </a>
                        ) : (
                          <span className="inline-flex w-full justify-center rounded bg-white/5 px-4 py-3 text-center text-xs font-mono tracking-widest uppercase text-muted">
-                           Contact details coming soon
+                           Local contact coming soon · use the current network contact below
                          </span>
                        )}
                     </div>
@@ -116,7 +116,7 @@ export default function Business() {
 
               <FadeIn delay={0.3}>
                 <div className="mt-4 p-6 rounded-xl border border-white/5 bg-canvas-surface text-center">
-                   <p className="text-sm text-ink-soft mb-3">Don't see your area? Help us bring SBI there.</p>
+                   <p className="text-sm text-ink-soft mb-3">Don't see your area yet? Help us bring SBI there as the network grows.</p>
                   <a
                      href={CHAPTER_REQUEST_FORM_URL}
                      target="_blank"
@@ -176,12 +176,12 @@ export default function Business() {
         <FadeIn className="relative mx-auto flex max-w-2xl flex-col items-center">
           <span className="grid h-11 w-11 place-items-center rounded-full border border-gold-500/30 bg-gold-500/10 font-display text-gold-400">?</span>
           <h2 className="mt-5 font-display text-[clamp(2.25rem,5vw,3.5rem)] font-medium tracking-tight">Questions?</h2>
-          <p className="mt-4 max-w-lg text-center leading-relaxed text-ink-soft">We&apos;ll point you to the right chapter or answer anything directly.</p>
+          <p className="mt-4 max-w-lg text-center leading-relaxed text-ink-soft">Our current network contact can point you to the right chapter or answer general questions.</p>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
             className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-center text-sm font-medium text-ink transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
           >
-            Contact Support
+             Email SBI&apos;s Current Contact
           </a>
         </FadeIn>
       </section>

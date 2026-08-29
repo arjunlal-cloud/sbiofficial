@@ -157,7 +157,7 @@ export default function Landing() {
             <FadeIn>
               <p className="font-mono text-[10px] tracking-[0.25em] text-gold-500 uppercase mb-8 flex items-center">
                 <span className="w-8 h-px bg-gold-500/40 inline-block mr-3 align-middle" />
-                Student Business Initiative
+                SBI · Student Business Initiative
               </p>
             </FadeIn>
             
@@ -323,7 +323,7 @@ export default function Landing() {
                   </p>
                 </div>
                 <Link to="/business" className="mt-auto relative z-10 inline-flex items-center justify-between rounded-lg bg-canvas px-6 py-4 font-mono text-xs uppercase tracking-widest text-gold-500 transition-transform group-hover:scale-[1.02]">
-                  Get Started <span>&rarr;</span>
+                   Find Business Support <span>&rarr;</span>
                 </Link>
               </div>
             </FadeIn>
@@ -345,7 +345,7 @@ export default function Landing() {
         </div>
       </section>
       
-      <StickyMobileCta href="/business" label="Get Started" />
+       <StickyMobileCta href="/business" label="Find Business Support" />
     </div>
   )
 }
