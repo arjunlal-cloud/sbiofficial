@@ -313,17 +313,17 @@ export default function Landing() {
             <h2 className="font-display text-4xl md:text-6xl font-medium tracking-tight">What can we build for you?</h2>
           </FadeIn>
           <div className="grid md:grid-cols-2 gap-6 h-full items-stretch">
-            <FadeIn delay={0.1} className="h-full">
-              <div className="h-full rounded-2xl bg-gold-500 p-10 md:p-14 text-canvas flex flex-col justify-between shadow-[0_0_40px_rgba(192,155,45,0.15)] group relative overflow-hidden">
+             <FadeIn delay={0.1} className="h-full">
+               <div className="h-full rounded-2xl bg-gold-500 p-10 md:p-14 text-canvas flex flex-col justify-between shadow-[0_0_40px_rgba(192,155,45,0.15)] group relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent pointer-events-none" />
                 <div className="relative z-10">
-                  <h3 className="font-display text-3xl font-medium tracking-tight mb-4 text-canvas">Businesses</h3>
+                   <h3 className="font-display text-3xl font-medium tracking-tight mb-4 text-canvas">Chapter Leaders</h3>
                   <p className="text-canvas/80 leading-relaxed mb-10 text-[15px]">
-                    Get a professional website, video, or brand refresh created by top local students, completely free.
+                     Start an agency. Build real skills. Serve your community. We give you the playbook and support.
                   </p>
                 </div>
-                <Link to="/business" className="mt-auto relative z-10 inline-flex items-center justify-between rounded-lg bg-canvas px-6 py-4 font-mono text-xs uppercase tracking-widest text-gold-500 transition-transform group-hover:scale-[1.02]">
-                   Find Business Support <span>&rarr;</span>
+                 <Link to="/chapter" className="mt-auto relative z-10 inline-flex items-center justify-between rounded-lg bg-canvas px-6 py-4 font-mono text-xs uppercase tracking-widest text-gold-500 transition-transform group-hover:scale-[1.02]">
+                   Apply to Lead <span>&rarr;</span>
                 </Link>
               </div>
             </FadeIn>
@@ -331,13 +331,13 @@ export default function Landing() {
             <FadeIn delay={0.2} className="h-full">
               <div className="h-full rounded-2xl border-2 border-white/10 bg-canvas p-10 md:p-14 text-ink flex flex-col justify-between group transition-colors hover:border-white/20">
                 <div>
-                  <h3 className="font-display text-3xl font-medium tracking-tight mb-4">Chapter Leaders</h3>
+                   <h3 className="font-display text-3xl font-medium tracking-tight mb-4">Businesses</h3>
                   <p className="text-ink-soft leading-relaxed mb-10 text-[15px]">
-                    Start an agency. Build real skills. Serve your community. We give you the playbook and support.
+                     Get a professional website, video, or brand refresh created by top local students, completely free.
                   </p>
                 </div>
-                <Link to="/chapter" className="mt-auto inline-flex items-center justify-between rounded-lg bg-white/5 px-6 py-4 font-mono text-xs uppercase tracking-widest text-ink transition-transform group-hover:scale-[1.02] group-hover:bg-white/10">
-                  Apply to Lead <span>&rarr;</span>
+                 <Link to="/business" className="mt-auto inline-flex items-center justify-between rounded-lg bg-white/5 px-6 py-4 font-mono text-xs uppercase tracking-widest text-ink transition-transform group-hover:scale-[1.02] group-hover:bg-white/10">
+                   Find Business Support <span>&rarr;</span>
                 </Link>
               </div>
             </FadeIn>
