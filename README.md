@@ -2,7 +2,7 @@
 
 SBI Network connects student-led chapters with local small businesses for free digital services, while giving ambitious students a clear path to connect, learn, lead chapters, and help one another grow.
 
-**Live website:** [https://sbi-network.replit.app](https://sbi-network.replit.app)
+**Live website:** https://sbinetwork.replit.app 
 
 ## Stack
 
