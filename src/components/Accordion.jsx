@@ -1,34 +1,45 @@
-/** Native <details> accordion — dramatic style. */
+/**
+ * Native <details> disclosure.
+ *
+ * Open state is signalled by a filled index chip, a brightened rule, and the
+ * chevron rotation. No coloured side-stripe: the emphasis lives in the type.
+ */
 export default function Accordion({ title, defaultOpen = false, children, id, indexNumber }) {
   return (
     <details
       id={id}
       open={defaultOpen}
-      className="group rounded-2xl border border-white/5 bg-canvas-elevated shadow-lg transition-all open:border-l-4 open:border-l-gold-500 open:border-white/10 open:shadow-xl scroll-mt-24"
+      className="group scroll-mt-28 border-t border-[rgba(11,31,58,0.14)] transition-colors duration-300 open:border-gold-500/40"
+      data-testid={id ? `accordion-${id}` : `accordion-${title.replace(/\s+/g, '-').toLowerCase()}`}
     >
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-5 transition-colors duration-200 select-none hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 sm:gap-4 sm:px-8 sm:py-6 [&::-webkit-details-marker]:hidden">
-        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+      <summary 
+        className="flex cursor-pointer list-none select-none items-center justify-between gap-4 py-4 transition-colors duration-300 hover:text-gold-300 focus-gold [&::-webkit-details-marker]:hidden"
+        data-testid={id ? `summary-${id}` : `summary-${title.replace(/\s+/g, '-').toLowerCase()}`}
+      >
+        <div className="flex min-w-0 items-center gap-5">
           {indexNumber && (
-            <span className="font-mono text-xs font-medium text-gold-500 bg-gold-500/10 px-2 py-1 rounded-sm block min-w-[30px] text-center">
+            <span className="shrink-0 font-mono text-label tracking-label text-ink-soft transition-colors duration-300 group-open:text-gold-400">
               {indexNumber}
             </span>
           )}
-          <span className="min-w-0 font-display text-lg font-medium tracking-tight text-ink sm:text-2xl">{title}</span>
+          <span className="min-w-0 font-display text-display-sm font-medium leading-snug tracking-display text-ink transition-colors duration-300 group-open:text-gold-300 sm:text-display-sm">
+            {title}
+          </span>
         </div>
         <svg
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="h-6 w-6 shrink-0 text-muted transition-transform duration-300 group-open:rotate-180"
+          className="h-5 w-5 shrink-0 text-ink-soft transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-open:rotate-180 group-open:text-gold-400"
           aria-hidden="true"
         >
           <path d="m6 9 6 6 6-6" />
         </svg>
       </summary>
-      <div className="min-w-0 w-full max-w-full overflow-hidden break-words [overflow-wrap:anywhere] px-4 pb-7 pt-2 text-[15px] leading-relaxed text-ink-soft sm:px-8 sm:pb-8 sm:pl-[5.25rem]">
+      <div className="max-w-measure break-words pb-7 pl-0 text-body leading-relaxed text-ink [overflow-wrap:anywhere] sm:pl-[3.6rem]">
         {children}
       </div>
     </details>

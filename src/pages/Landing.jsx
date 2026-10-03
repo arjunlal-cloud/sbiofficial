@@ -1,351 +1,529 @@
-import { Link } from 'react-router-dom'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
-import { FadeIn, StaggerContainer } from '../components/FadeIn'
-import StickyMobileCta from '../components/StickyMobileCta'
+import { Link } from 'wouter'
+import { motion } from 'framer-motion'
+import { Wordmark } from '../components/Brand'
+import Cta from '../components/Cta'
+import ConstellationField from '../components/ConstellationField'
+import chapters from '../data/chapters.json'
+import { stats } from '../data/stats'
+import { LEADERSHIP } from '../data/team'
+import { Reveal, Stagger, EASE } from '../components/motion/Reveal'
+import Section from '../components/Section'
+import SectionHead from '../components/motion/SectionHead'
+import { trackOutbound } from '../lib/analytics'
+import { useDocumentMeta } from '../lib/meta'
 
-const WORDS = ["Websites", "Promo Videos", "GBP Optimization", "Social Media"]
-const PROJECT_PREVIEWS = [
-  { type: 'Website preview', title: 'A local business website', detail: 'Layout and interface preview — awaiting an approved project image.', mark: '</>' },
-  { type: 'Web development preview', title: 'Building the digital basics', detail: 'Development update placeholder — real work imagery will appear here with approval.', mark: '{ }' },
-  { type: 'New chapter preview', title: 'A growing local network', detail: 'Chapter launch update placeholder — awaiting a verified chapter announcement.', mark: '↗' },
-  { type: 'Newsletter preview', title: 'What the network is working on', detail: 'Future newsletter and community update preview — awaiting approved content.', mark: '01' },
-  { type: 'Meet the team preview', title: 'The people doing the work', detail: 'Team feature placeholder — awaiting approved photos and role details.', mark: '◎' },
+const MAKES = [
+  ['Websites', 'Built around how the business actually works. Clean, fast, and easy to update.'],
+  ['Promo videos', 'Short-form video, shot and cut by students to tell your story.'],
+  ['Google profiles', 'Correct hours, clear photos, proper categories, and a strong description.'],
+  ['Social media', 'Account setup, strategy, and a first run of content to get you started.'],
 ]
 
-function RotatingText() {
-  const [index, setIndex] = useState(0)
+const HOW = [
+  ['01', 'Tell us what needs work', 'A business owner requests help, or a chapter reaches out locally.'],
+  ['02', 'Match with a local chapter', 'We confirm the town, the need, and what the student team can deliver.'],
+  ['03', 'Students build the project', 'SBI’s central student team answers questions and checks the finished work.'],
+  ['04', 'Hand it over', 'The business owns the finished work. Students keep the experience.'],
+]
 
-  useEffect(() => {
-    const timer = setInterval(() => setIndex((i) => (i + 1) % WORDS.length), 2500)
-    return () => clearInterval(timer)
-  }, [])
+const NETWORK_MODEL = [
+  ['A team in your town', 'A small student chapter works directly with nearby businesses and community groups.'],
+  ['Training before client work', 'SBI’s central student team teaches chapter leaders how to plan projects and work with clients.'],
+  ['A check before handoff', 'The central student team reviews finished work before the business receives it.'],
+]
 
+const PROOF = [
+  ['Meet the students', 'See the students who train chapter leaders, answer questions, and review finished work.', '/team'],
+  ['See how chapters start', 'Read what applying, training, and a first business project look like.', '/chapter'],
+  ['See only approved work', 'SBI publishes client examples and testimonials only after the client gives permission.'],
+]
+
+const PATHS = [
+  {
+    to: '/chapter',
+    label: 'Start a chapter',
+    detail: 'Start with two high school students. SBI trains your team before you work with a local business.',
+    cta: 'See how chapters start',
+    primary: true,
+  },
+  {
+    to: '/business',
+    label: 'I own a business',
+    detail: 'Ask a nearby chapter for a website, Google Business Profile help, social media setup, or selected video work.',
+    cta: 'Request free digital help',
+    primary: false,
+  },
+]
+
+/* ── Hero ───────────────────────────────────────────────── */
+
+function Hero() {
   return (
-    <span className="relative inline-block text-gold-500">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={WORDS[index]}
-          initial={{ opacity: 0, y: 24 }}
+    <Section
+      weight="anchor"
+      center
+      className="reference-glow hero-h relative flex items-center justify-center"
+      backdrop={
+        <ConstellationField
+          density={48}
+          reach={170}
+          className="opacity-[0.4] sm:opacity-[0.52]"
+        />
+      }
+    >
+      <div className="relative z-10 mx-auto w-full max-w-[56rem] text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -24 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute left-0 whitespace-nowrap"
+          transition={{ duration: 0.8, ease: EASE }}
+          className="flex flex-col items-center"
         >
-          {WORDS[index]}
-        </motion.span>
-      </AnimatePresence>
-      {/* Invisible sizer — stays fixed to widest word so layout doesn't jump */}
-      <span className="invisible whitespace-nowrap" aria-hidden="true">Social Media</span>
-    </span>
-  )
-}
+          <Wordmark size="lg" className="justify-center" />
+          <p className="mt-4 rounded-full border border-navy-100 bg-navy-50 px-4 py-1.5 font-mono text-label font-medium uppercase tracking-label text-navy-600">
+            Student Business Initiative
+          </p>
+        </motion.div>
 
-function AnimatedCounter({ value, label }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
-  const [count, setCount] = useState(0)
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.08, ease: EASE }}
+          className="mt-8 flex items-center justify-center gap-3 font-mono text-label uppercase tracking-label text-gold-700"
+        >
+          <span className="h-px w-10 bg-gold-500" />
+          A local student organization
+          <span className="h-px w-10 bg-gold-500" />
+        </motion.p>
 
-  useEffect(() => {
-    if (isInView) {
-      let start = 0;
-      const duration = 1500;
-      const end = parseInt(value.replace(/[^0-9]/g, ''));
-      const timer = setInterval(() => {
-        start += Math.ceil(end / 30);
-        if (start >= end) {
-          clearInterval(timer);
-          setCount(end);
-        } else {
-          setCount(start);
-        }
-      }, duration / 30);
-      return () => clearInterval(timer);
-    }
-  }, [isInView, value])
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.16, ease: EASE }}
+          className="mx-auto mt-4 font-display text-display-xl font-medium leading-[0.96] tracking-[-0.055em] text-navy-950"
+        >
+          Practical work.
+          <span className="mt-2 block text-navy-600">Local leadership.</span>
+        </motion.h1>
 
-  return (
-    <div ref={ref} className="text-center md:text-left flex flex-col gap-2">
-      <span className="font-display text-6xl md:text-[80px] leading-none font-medium tracking-tight text-gold-500">
-        {count}{value.includes('+') ? '+' : ''}
-      </span>
-      <span className="font-mono text-xs uppercase tracking-widest text-ink-soft mt-2">
-        {label}
-      </span>
-    </div>
-  )
-}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.24, ease: EASE }}
+          className="mx-auto mt-7 max-w-[42rem] text-body-lg leading-relaxed text-ink-soft"
+        >
+          High school students lead free digital projects for nearby businesses. SBI trains
+          chapter leaders, supports the work, and reviews finished projects before handoff.
+        </motion.p>
 
-function ProjectPreviewCarousel() {
-  const [active, setActive] = useState(0)
-  const [paused, setPaused] = useState(false)
-  const project = PROJECT_PREVIEWS[active]
-  const move = (direction) => setActive((current) => (current + direction + PROJECT_PREVIEWS.length) % PROJECT_PREVIEWS.length)
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.32, ease: EASE }}
+          className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <Cta to="/chapter" size="xl" onClick={() => trackOutbound('fork_click', 'chapter')}>
+            Start a chapter
+          </Cta>
+          <Cta to="/business" tone="ghost" size="xl" onClick={() => trackOutbound('fork_click', 'business')}>
+            I own a business
+          </Cta>
+        </motion.div>
 
-  useEffect(() => {
-    if (paused) return undefined
-    const timer = window.setInterval(() => move(1), 4800)
-    return () => window.clearInterval(timer)
-  }, [paused])
-
-  return (
-    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} className="relative w-full max-w-[520px] overflow-hidden rounded-2xl border border-white/10 bg-canvas-surface p-3 shadow-2xl">
-      <div className="relative min-h-[420px] overflow-hidden rounded-xl border border-white/5 bg-[radial-gradient(circle_at_78%_22%,rgba(192,155,45,0.18),transparent_28%),linear-gradient(145deg,#132040,#080d1a)] p-7 sm:p-9">
-        <div className="absolute inset-0 network-grid opacity-45" />
-        <div className="absolute -right-14 -top-14 h-56 w-56 rounded-full border border-gold-500/20" />
-        <div className="absolute -right-4 top-12 h-40 w-40 rounded-full border border-white/10" />
-        <AnimatePresence mode="wait">
-          <motion.div key={project.title} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -18 }} transition={{ duration: 0.3 }} className="relative z-10 flex min-h-[352px] flex-col">
-            <div className="flex items-center justify-between">
-              <span className="rounded-full border border-gold-500/30 bg-gold-500/10 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-gold-300">Preview update</span>
-              <span className="font-mono text-xs text-ink-soft">{String(active + 1).padStart(2, '0')} / {String(PROJECT_PREVIEWS.length).padStart(2, '0')}</span>
-            </div>
-            <div className="mt-auto">
-              <span className="font-display text-7xl font-medium tracking-[-0.08em] text-gold-500/70">{project.mark}</span>
-              <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-400">{project.type}</p>
-              <h2 className="mt-3 max-w-sm font-display text-4xl font-medium leading-[1.02] tracking-[-0.045em] text-ink">{project.title}</h2>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-soft">{project.detail}</p>
-              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-soft/70">Real approved images will replace these previews.</p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <p className="mx-auto mt-5 max-w-[36rem] text-body-sm text-ink-soft">
+          Today, SBI has chapters in East Brunswick, Guadalajara, and Simi Valley.
+        </p>
       </div>
-      <div className="mt-3 flex items-center justify-between gap-4 px-1 pb-1">
-        <div className="flex gap-1.5" aria-label={`Preview ${active + 1} of ${PROJECT_PREVIEWS.length}`}>
-          {PROJECT_PREVIEWS.map((item, index) => <button key={item.type} onClick={() => { setActive(index); setPaused(true) }} aria-label={`Show ${item.type}`} className={`h-1.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 ${index === active ? 'w-8 bg-gold-500' : 'w-2 bg-white/20 hover:bg-white/40'}`} />)}
+    </Section>
+  )
+}
+
+/* ── Trust band ─────────────────────────────────────────── */
+
+function TrustBand() {
+  return (
+    <section className="border-y border-canvas-border-strong bg-navy-900 px-5 py-8 text-white sm:px-8">
+      <div className="mx-auto grid max-w-page gap-7 sm:grid-cols-3 sm:divide-x sm:divide-navy-700">
+        <div className="border-l-2 border-gold-400 pl-4 sm:border-l-0 sm:pl-0 sm:pr-8">
+          <p className="font-mono text-label uppercase tracking-label text-navy-300">Current footprint</p>
+          <p className="mt-1 font-display text-display-sm font-medium tracking-tight text-white">
+            {stats.chapters.value} local chapters
+          </p>
+          <p className="mt-1 text-body-sm text-navy-100/75">
+            East Brunswick, Guadalajara, and Simi Valley.
+          </p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => { move(-1); setPaused(true) }} aria-label="Previous preview" className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-ink-soft transition-colors hover:bg-white/5 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500">←</button>
-          <button onClick={() => { move(1); setPaused(true) }} aria-label="Next preview" className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-ink-soft transition-colors hover:bg-white/5 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500">→</button>
-          <button onClick={() => setPaused((value) => !value)} aria-label={paused ? 'Resume automatic previews' : 'Pause automatic previews'} className="px-2 font-mono text-[9px] uppercase tracking-widest text-gold-300 hover:text-gold-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500">{paused ? 'Play' : 'Pause'}</button>
+        <div className="border-l-2 border-gold-400 pl-4 sm:border-l-0 sm:px-8">
+          <p className="font-mono text-label uppercase tracking-label text-navy-300">For businesses</p>
+          <p className="mt-1 font-display text-display-sm font-medium tracking-tight text-white">Free locally</p>
+          <p className="mt-1 text-body-sm text-navy-100/75">Businesses keep the finished work with no invoice.</p>
+        </div>
+        <div className="border-l-2 border-gold-400 pl-4 sm:border-l-0 sm:pl-8">
+          <p className="font-mono text-label uppercase tracking-label text-navy-300">Shared standard</p>
+          <p className="mt-1 font-display text-display-sm font-medium tracking-tight text-white">Checked before handoff</p>
+          <p className="mt-1 text-body-sm text-navy-100/75">The central student team reviews finished work.</p>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
-const SERVICES = [
-  {
-    title: "Websites",
-    desc: "Custom sites built to actually reflect how your business works — not a template dropped on your address."
-  },
-  {
-    title: "Promo Videos",
-    desc: "Short-form video shot and edited by students who do this for their own channels too."
-  },
-  {
-    title: "Google Business Profile",
-    desc: "Hours, photos, descriptions — the stuff that decides whether someone calls you or your competitor."
-  },
-  {
-    title: "Social Media",
-    desc: "A real starting point: handle setup, first content, and a template your team can actually keep up with."
-  }
-]
+/* ── What a chapter makes ───────────────────────────────── */
+
+function Makes() {
+  return (
+    <Section weight="support" bordered className="bg-canvas">
+      <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:items-start">
+        <div className="lg:sticky lg:top-32">
+          <SectionHead
+            weight="support"
+            title="What students make for local businesses"
+            lede="A nearby business can request practical digital work from its local SBI chapter at no cost."
+          />
+          <div className="mt-8">
+            <Cta to="/business" tone="ghost" size="md">
+              Explore services for businesses
+            </Cta>
+          </div>
+        </div>
+
+        <Stagger className="grid gap-x-8 gap-y-12 sm:grid-cols-2" gap={0.08}>
+          {MAKES.map(([name, detail]) => (
+            <Reveal key={name} stagger variant="up">
+              <div className="relative pl-6 before:absolute before:left-0 before:top-2 before:h-full before:w-[2px] before:bg-navy-200">
+                <h3 className="font-display text-xl font-medium text-navy-950">
+                  {name}
+                </h3>
+                <p className="mt-3 text-body text-ink-soft">{detail}</p>
+              </div>
+            </Reveal>
+          ))}
+        </Stagger>
+      </div>
+    </Section>
+  )
+}
+
+/* ── How the work runs ──────────────────────────────────── */
+
+function How() {
+  return (
+    <Section weight="support" bordered className="bg-canvas-surface">
+      <SectionHead
+        weight="anchor"
+        kicker="For local businesses"
+        title="How a business gets help from SBI"
+        lede="A business explains what it needs, students build it, and the business receives the finished work."
+        align="center"
+      />
+
+      <div className="mx-auto mt-16 grid max-w-[68rem] gap-10 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-16">
+        <Reveal variant="scale">
+          <figure className="relative overflow-hidden rounded-2xl border border-canvas-border-strong bg-white shadow-xl shadow-navy-900/5">
+            <img
+              src="/about-work-session.webp"
+              alt="SBI students working together at the East Brunswick Public Library"
+              width="1000"
+              height="625"
+              className="aspect-[4/3] w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption className="border-t border-canvas-border bg-canvas-elevated p-4 text-body-sm text-ink-soft">
+              SBI students planning a real project together in East Brunswick, New Jersey.
+            </figcaption>
+          </figure>
+        </Reveal>
+
+        <Stagger className="relative space-y-6" gap={0.09}>
+          {HOW.map(([n, title, body], i) => (
+            <Reveal key={n} stagger variant="wake" className="relative">
+              <article className="flex gap-5">
+                <span className="shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-gold-100 font-mono text-label font-semibold text-gold-700 border border-gold-200">
+                  {n}
+                </span>
+                <div className="pt-1">
+                  <h3 className="font-display text-lg font-medium text-navy-950">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-body-sm text-ink-soft leading-relaxed">{body}</p>
+                </div>
+              </article>
+              {i !== HOW.length - 1 && (
+                <div className="absolute left-5 top-10 h-full w-px -ml-[0.5px] bg-canvas-border" />
+              )}
+            </Reveal>
+          ))}
+        </Stagger>
+      </div>
+    </Section>
+  )
+}
+
+/* ── The network model ───────────────────────────────────── */
+
+function NetworkModel() {
+  return (
+    <Section weight="support" bordered className="bg-canvas-elevated">
+      <SectionHead
+        weight="support"
+        title="How local chapters stay consistent"
+        lede="Every chapter works locally, but all chapter leaders receive the same training and project review."
+        align="center"
+      />
+
+      <Stagger className="mt-12 divide-y divide-navy-900/15 border-y border-navy-900/15" gap={0.08}>
+        {NETWORK_MODEL.map(([title, body], index) => (
+          <Reveal key={title} stagger variant="up">
+            <article className="grid gap-4 py-7 sm:grid-cols-[5rem_1fr_1.25fr] sm:items-baseline sm:gap-8">
+              <span className="font-mono text-label tracking-label text-gold-700">0{index + 1}</span>
+              <h3 className="font-display text-display-sm font-medium tracking-display text-navy-950">{title}</h3>
+              <p className="max-w-measure text-body-sm leading-relaxed text-ink-soft">{body}</p>
+            </article>
+          </Reveal>
+        ))}
+      </Stagger>
+    </Section>
+  )
+}
+
+/* ── Proof & Chapters ────────────────────────────────────── */
+
+function Proof() {
+  return (
+    <Section weight="support" bordered className="bg-canvas">
+      <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-16">
+        <div>
+          <SectionHead
+            weight="support"
+            title="What a business can expect"
+            lede="A local student chapter does the work, SBI’s central student team checks it, and the business receives the finished result."
+          />
+          <div className="mt-8 space-y-4">
+            {PROOF.map(([title, detail, to]) => {
+              const content = (
+                <>
+                  <h3 className="font-display text-lg font-medium text-navy-950">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-body-sm text-ink-soft">{detail}</p>
+                  {to && (
+                    <span className="mt-4 inline-flex items-center text-sm font-semibold text-gold-600">
+                      Explore <span aria-hidden="true" className="ml-1.5 transition-transform group-hover:translate-x-1">→</span>
+                    </span>
+                  )}
+                </>
+              )
+
+              return to ? (
+                <Link
+                  key={title}
+                  href={to}
+                  className="group block rounded-xl border border-canvas-border bg-white p-6 transition-colors hover:border-gold-300 hover:bg-gold-50/30"
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div key={title} className="rounded-xl border border-dashed border-canvas-border-strong p-6 bg-canvas-elevated/50">
+                  {content}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <aside className="overflow-hidden rounded-2xl bg-navy-900 text-white shadow-xl">
+          <div className="p-8 sm:p-10">
+            <p className="font-mono text-label uppercase tracking-label text-gold-300">What exists today</p>
+            <h3 className="mt-4 font-display text-3xl font-medium leading-tight text-white">
+              Three chapters. One shared way of working.
+            </h3>
+            <p className="mt-4 text-body text-navy-100/80 leading-relaxed">
+              SBI started in East Brunswick and now has local teams in three communities. Client work
+              and quotes are published only after delivery and permission.
+            </p>
+            <div className="mt-8 divide-y divide-navy-700/50 border-y border-navy-700/50">
+              {chapters.map((chapter) => (
+                <div key={chapter.id} className="flex items-center justify-between gap-4 py-5">
+                  <div>
+                    <p className="font-display text-lg font-medium text-white">
+                      {chapter.name}
+                    </p>
+                    <p className="mt-1 text-sm text-navy-200">{chapter.region}</p>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-navy-600 bg-navy-800 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-navy-200">
+                    Active team
+                  </span>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/business#coverage"
+              className="mt-8 inline-flex items-center text-sm font-semibold text-gold-400 hover:text-gold-300 transition-colors"
+            >
+              See coverage and contact options <span aria-hidden="true" className="ml-2">→</span>
+            </Link>
+          </div>
+        </aside>
+      </div>
+    </Section>
+  )
+}
+
+/* ── The students behind the work ───────────────────────── */
+
+function Students() {
+  const featured = LEADERSHIP.filter((member) => member.photo).slice(0, 4)
+
+  return (
+    <Section weight="support" bordered className="bg-canvas-surface">
+      <SectionHead
+        weight="support"
+        title="Meet the students behind the work."
+        lede="These students train new chapter leaders, answer project questions, and review finished work."
+        align="center"
+      />
+
+      <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" gap={0.08}>
+        {featured.map((member) => (
+          <Reveal key={member.name} stagger variant="up">
+            <Link
+              href="/team"
+              className="group block overflow-hidden rounded-2xl border border-canvas-border-strong bg-white transition-all hover:border-navy-300 hover:shadow-lg hover:shadow-navy-900/5"
+            >
+              <div className="aspect-[4/5] overflow-hidden bg-canvas-elevated">
+                <img
+                  src={member.photo}
+                  alt={`${member.name}, ${member.role}`}
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  style={{ objectPosition: member.photoPosition }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="p-5">
+                <p className="font-mono text-[11px] uppercase tracking-label text-gold-600">{member.role}</p>
+                <h3 className="mt-2 font-display text-lg font-medium text-navy-950">
+                  {member.name}
+                </h3>
+                <p className="mt-2 text-sm text-ink-soft leading-relaxed">{member.desc}</p>
+              </div>
+            </Link>
+          </Reveal>
+        ))}
+      </Stagger>
+
+      <div className="mt-10 text-center">
+        <Link
+          href="/team"
+          className="inline-flex items-center rounded-full px-5 py-2.5 text-sm font-semibold text-navy-600 bg-navy-50 hover:bg-navy-100 transition-colors"
+        >
+          Meet the full team <span aria-hidden="true" className="ml-2">→</span>
+        </Link>
+      </div>
+    </Section>
+  )
+}
+
+/* ── Testimonial-ready proof ─────────────────────────────── */
+
+/* ── The fork ───────────────────────────────────────────── */
+
+function Paths() {
+  return (
+    <Section weight="anchor" bordered className="bg-canvas">
+      <SectionHead
+        weight="anchor"
+        kicker="Get involved"
+        title="Choose what you want to do"
+        lede="Lead a student chapter in your town, or ask a nearby chapter to help your business."
+        align="center"
+      />
+
+      <Stagger className="mt-12 grid gap-6 lg:grid-cols-2" gap={0.12}>
+        {PATHS.map((path) => (
+          <Reveal key={path.to} stagger variant="wake">
+            <Link
+              href={path.to}
+              onClick={() => trackOutbound('fork_click', path.to.slice(1))}
+              className={
+                path.primary
+                  ? 'group relative isolate flex h-full flex-col overflow-hidden rounded-2xl bg-navy-900 p-8 text-white shadow-xl transition-transform hover:-translate-y-1 hover:shadow-2xl sm:p-10'
+                  : 'group relative isolate flex h-full flex-col overflow-hidden rounded-2xl border border-canvas-border-strong bg-white p-8 text-ink transition-transform hover:-translate-y-1 hover:shadow-xl sm:p-10'
+              }
+            >
+              <h3 className="relative z-10 font-display text-3xl font-medium tracking-tight">
+                {path.label}
+              </h3>
+              <p
+                className={`relative z-10 mt-4 max-w-measure-narrow flex-grow text-lg leading-relaxed ${
+                  path.primary ? 'text-navy-100' : 'text-ink-soft'
+                }`}
+              >
+                {path.detail}
+              </p>
+              <span
+                className={`relative z-10 mt-8 inline-flex items-center gap-2 text-sm font-semibold ${
+                  path.primary ? 'text-gold-400' : 'text-gold-600'
+                }`}
+              >
+                {path.cta}
+                <span
+                  aria-hidden="true"
+                  className="transition-transform duration-500 ease-out group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+      </Stagger>
+    </Section>
+  )
+}
+
+/* ── The close ────────────────────────────────────────────── */
+
+function Close() {
+  return (
+    <Section weight="inline" className="pb-24 pt-8 text-center bg-canvas">
+      <Reveal variant="up">
+        <Cta to="/chapter" size="xl" onClick={() => trackOutbound('fork_click', 'chapter-close')}>
+          Start a chapter
+        </Cta>
+      </Reveal>
+
+      <Reveal variant="up" delay={0.1}>
+        <p className="mt-6 text-body-sm text-ink-soft">
+          Own a business instead?{' '}
+          <Link
+            href="/business"
+            onClick={() => trackOutbound('fork_click', 'business-close')}
+            className="font-medium text-gold-600 underline decoration-gold-600/40 underline-offset-4 transition-colors hover:text-gold-700"
+          >
+            Request free digital help
+          </Link>
+          .
+        </p>
+      </Reveal>
+    </Section>
+  )
+}
 
 export default function Landing() {
+  useDocumentMeta('home')
+
   return (
-    <div className="bg-canvas overflow-hidden w-full">
-      {/* Hero Section */}
-      <section id="sbi-home" className="relative isolate flex min-h-[90vh] scroll-mt-24 items-center pt-24 pb-24 md:pt-28 overflow-hidden">
-        {/* Ambient light blobs */}
-        <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gold-500/20 blur-[140px] pointer-events-none animate-[pulse_6s_ease-in-out_infinite] z-0" />
-        <div className="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/3 w-[500px] h-[500px] rounded-full bg-navy-800/20 blur-[120px] pointer-events-none z-0" />
-
-        <div className="mx-auto grid w-full max-w-7xl px-4 sm:px-6 lg:grid-cols-[1.2fr_1fr] gap-16 lg:gap-8 items-center relative z-10">
-          <div className="text-left">
-            <FadeIn>
-              <p className="font-mono text-[10px] tracking-[0.25em] text-gold-500 uppercase mb-8 flex items-center">
-                <span className="w-8 h-px bg-gold-500/40 inline-block mr-3 align-middle" />
-                SBI · Student Business Initiative
-              </p>
-            </FadeIn>
-            
-            <FadeIn delay={0.1}>
-              <h1 className="font-display text-[clamp(2.75rem,6.8vw,5.5rem)] leading-[1.05] tracking-[-0.04em] font-medium text-ink max-w-full">
-                <span className="block">Start a chapter.</span>
-                <span className="block text-ink-soft">Build real skills.</span>
-              </h1>
-            </FadeIn>
-            
-            <FadeIn delay={0.2}>
-              <p className="mt-8 max-w-lg text-[17px] md:text-lg leading-relaxed text-ink-soft">
-                A place for ambitious teenagers to learn by doing, lead something of their own, and connect with peers building chapters in other towns.
-              </p>
-            </FadeIn>
-            
-            <FadeIn delay={0.3}>
-              <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-                <Link
-                  to="/chapter"
-                  className="rounded bg-gold-500 px-8 py-4 text-center text-[15px] font-medium text-canvas transition-all hover:bg-gold-400 hover:shadow-[0_0_32px_rgba(192,155,45,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-                >
-                  Start a chapter
-                </Link>
-                <Link
-                  to="/business"
-                  className="rounded border border-white/20 bg-white/5 px-8 py-4 text-center text-[15px] font-medium text-ink transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-                >
-                  I'm a business owner
-                </Link>
-              </div>
-            </FadeIn>
-          </div>
-          
-          <FadeIn delay={0.4} className="hidden lg:flex justify-end relative z-10">
-            <ProjectPreviewCarousel />
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Gradient divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent w-full" />
-
-      {/* Ticker */}
-      <div className="relative bg-canvas-surface/20 py-5 overflow-hidden whitespace-nowrap flex text-[13px] font-mono tracking-widest uppercase text-ink-soft">
-        <motion.div
-          animate={{ x: [0, -1035] }}
-          transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
-          className="flex gap-16 px-8 items-center"
-        >
-          {Array(4).fill([
-            "3 Chapters Live", "5+ Businesses Served", "15+ Students Involved", "100% Free", "Est. 2025"
-          ]).flat().map((text, i) => (
-            <span key={i} className="flex items-center gap-16">
-              {text}
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-500/60 inline-block" />
-            </span>
-          ))}
-        </motion.div>
-      </div>
-
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent w-full" />
-
-      {/* Impact Counters */}
-      <section className="relative isolate py-24 md:py-32 bg-canvas">
-        <div className="pointer-events-none absolute inset-0 network-grid opacity-30" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <StaggerContainer className="grid grid-cols-2 gap-y-16 gap-x-8 md:grid-cols-4">
-            <FadeIn stagger><AnimatedCounter value="5+" label="Businesses Helped" /></FadeIn>
-            <FadeIn stagger><AnimatedCounter value="3" label="Chapters Live" /></FadeIn>
-            <FadeIn stagger><AnimatedCounter value="15+" label="Students Involved" /></FadeIn>
-            <FadeIn stagger><AnimatedCounter value="4" label="Services Offered" /></FadeIn>
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Split Audiences */}
-      <section className="py-24 bg-canvas-surface bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(21,46,82,0.4),transparent)] relative isolate border-t border-white/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 relative z-10">
-          <div className="grid md:grid-cols-2 gap-6 h-full">
-            <FadeIn className="h-full order-1 md:order-2">
-              <div className="h-full rounded-2xl border border-white/5 bg-canvas p-10 md:p-14 transition-colors hover:border-white/10 group flex flex-col">
-                <span className="font-mono text-[10px] tracking-widest text-gold-500 uppercase mb-4 block">For Local Businesses</span>
-                <h3 className="font-display text-3xl font-medium tracking-tight mb-4 break-words">Professional work, zero cost.</h3>
-                <p className="text-ink-soft leading-relaxed mb-10 flex-grow">
-                  A local student team handles your website, promo video, or Google Business Profile — and they do it for free. You get real deliverables; they get real experience.
-                </p>
-                <Link to="/business" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-gold-500 group-hover:text-gold-400 transition-colors mt-auto">
-                  Learn how it works <span className="text-lg transition-transform group-hover:translate-x-1">&rarr;</span>
-                </Link>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.1} className="h-full order-2 md:order-1">
-              <div className="h-full rounded-2xl border border-white/5 bg-canvas p-10 md:p-14 transition-colors hover:border-white/10 group flex flex-col">
-                <span className="font-mono text-[10px] tracking-widest text-gold-500 uppercase mb-4 block">For Future Chapter Leaders</span>
-                <h3 className="font-display text-3xl font-medium tracking-tight mb-4 break-words">Build an agency in your town.</h3>
-                <p className="text-ink-soft leading-relaxed mb-10 flex-grow">
-                  You run the chapter, manage real clients, and build skills that matter — alongside other ambitious students doing the same thing in their own towns.
-                </p>
-                <Link to="/chapter" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-gold-500 group-hover:text-gold-400 transition-colors mt-auto">
-                  Start a chapter <span className="text-lg transition-transform group-hover:translate-x-1">&rarr;</span>
-                </Link>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* Services */}
-      <section className="py-24 md:py-32 bg-canvas relative isolate">
-        <div className="pointer-events-none absolute right-[-15rem] top-0 h-[35rem] w-[35rem] rounded-full border border-gold-500/10" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <FadeIn>
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-              <div>
-                <span className="font-mono text-[10px] tracking-widest text-gold-500 uppercase mb-4 block flex items-center gap-3">
-                  <span className="w-8 h-px bg-gold-500/40 inline-block" /> Capabilities
-                </span>
-                <h2 className="font-display text-4xl md:text-5xl font-medium tracking-tight break-words">What we do.</h2>
-              </div>
-            </div>
-          </FadeIn>
-          <StaggerContainer className="grid sm:grid-cols-2 gap-6 items-stretch">
-            {SERVICES.map((srv) => (
-              <FadeIn key={srv.title} stagger className="h-full">
-                <div className="h-full flex flex-col p-10 rounded-xl border border-white/5 bg-canvas-elevated hover:-translate-y-1 hover:border-l-2 hover:border-l-gold-500/40 transition-all duration-300">
-                  <h4 className="font-display text-2xl font-medium mb-3 text-ink">{srv.title}</h4>
-                  <p className="text-ink-soft leading-relaxed flex-grow">{srv.desc}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Approved stories only — no anonymous testimonials */}
-      <section className="py-32 bg-canvas-surface bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(21,46,82,0.4),transparent)] relative border-y border-white/5 overflow-hidden">
-        <div className="absolute inset-0 bg-gold-500/5 mix-blend-screen pointer-events-none" />
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 relative z-10">
-          <FadeIn>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-gold-500">Community stories</p>
-            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight">Verified stories are on their way.</h2>
-            <p className="mx-auto mt-5 max-w-xl leading-relaxed text-ink-soft">We’ll publish approved business stories and outcomes here once the businesses have signed off. No placeholder reviews, no made-up quotes.</p>
-            <span className="mt-8 inline-flex rounded-full border border-gold-500/30 bg-gold-500/5 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-gold-300">Preview — awaiting approved stories</span>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-24 md:py-32 bg-canvas relative">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <FadeIn className="text-center mb-16">
-            <h2 className="font-display text-4xl md:text-6xl font-medium tracking-tight">What can we build for you?</h2>
-          </FadeIn>
-          <div className="grid md:grid-cols-2 gap-6 h-full items-stretch">
-             <FadeIn delay={0.1} className="h-full">
-               <div className="h-full rounded-2xl bg-gold-500 p-10 md:p-14 text-canvas flex flex-col justify-between shadow-[0_0_40px_rgba(192,155,45,0.15)] group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent pointer-events-none" />
-                <div className="relative z-10">
-                   <h3 className="font-display text-3xl font-medium tracking-tight mb-4 text-canvas">Chapter Leaders</h3>
-                  <p className="text-canvas/80 leading-relaxed mb-10 text-[15px]">
-                     Start an agency. Build real skills. Serve your community. We give you the playbook and support.
-                  </p>
-                </div>
-                 <Link to="/chapter" className="mt-auto relative z-10 inline-flex items-center justify-between rounded-lg bg-canvas px-6 py-4 font-mono text-xs uppercase tracking-widest text-gold-500 transition-transform group-hover:scale-[1.02]">
-                   Apply to Lead <span>&rarr;</span>
-                </Link>
-              </div>
-            </FadeIn>
-            
-            <FadeIn delay={0.2} className="h-full">
-              <div className="h-full rounded-2xl border-2 border-white/10 bg-canvas p-10 md:p-14 text-ink flex flex-col justify-between group transition-colors hover:border-white/20">
-                <div>
-                   <h3 className="font-display text-3xl font-medium tracking-tight mb-4">Businesses</h3>
-                  <p className="text-ink-soft leading-relaxed mb-10 text-[15px]">
-                     Get a professional website, video, or brand refresh created by top local students, completely free.
-                  </p>
-                </div>
-                 <Link to="/business" className="mt-auto inline-flex items-center justify-between rounded-lg bg-white/5 px-6 py-4 font-mono text-xs uppercase tracking-widest text-ink transition-transform group-hover:scale-[1.02] group-hover:bg-white/10">
-                   Find Business Support <span>&rarr;</span>
-                </Link>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-      
-       <StickyMobileCta href="/business" label="Find Business Support" />
+    <div className="w-full bg-canvas">
+      <Hero />
+      <TrustBand />
+      <Makes />
+      <How />
+      <NetworkModel />
+      <Proof />
+      <Students />
+      <Paths />
+      <Close />
     </div>
   )
 }

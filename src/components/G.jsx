@@ -61,9 +61,9 @@ export default function G({ t, children }) {
         <span
           role="tooltip"
           style={tooltipStyle}
-          className="pointer-events-none z-[80] rounded-xl border border-white/10 bg-canvas-elevated px-5 py-4 text-[13px] leading-relaxed text-ink shadow-2xl"
+          className="pointer-events-none z-[80] rounded-xl border border-white/10 bg-canvas-elevated px-5 py-4 text-body-sm leading-relaxed text-ink shadow-2xl"
         >
-          <span className="mb-2 block font-mono text-[10px] tracking-widest text-gold-500 uppercase">{t}</span>
+          <span className="mb-2 block font-mono text-label tracking-label text-gold-500 uppercase">{t}</span>
           {def}
         </span>
       )}

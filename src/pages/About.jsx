@@ -1,214 +1,453 @@
-import { Link } from 'react-router-dom'
-import { FadeIn } from '../components/FadeIn'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import Cta from '../components/Cta'
+import ConstellationField from '../components/ConstellationField'
 import StickyMobileCta from '../components/StickyMobileCta'
+import Section from '../components/Section'
+import { Reveal, Stagger, SplitWords, Parallax, EASE } from '../components/motion/Reveal'
+import SectionHead from '../components/motion/SectionHead'
+import { LEADERSHIP } from '../data/team'
+import { trackApply } from '../lib/analytics'
+import { useDocumentMeta } from '../lib/meta'
+
+/* The two founders are named in the story and their portraits already exist in
+   public/team, so the page shows them rather than describing them. */
+const FOUNDERS = LEADERSHIP.filter((m) => ["Da'El Kim", 'James Yu'].includes(m.name))
+
+const PERSPECTIVES = {
+  business: {
+    label: 'For local businesses',
+    eyebrow: 'A free local agency',
+    title: 'Get the digital work that usually gets pushed off.',
+    body:
+      'A nearby student chapter scopes the need, builds the work, and gives it to you. The student support team supports the chapter and reviews the work before it goes live.',
+    points: [
+      ['Useful from day one', 'Websites, promo videos, Google profiles, and social setup. This is work for real organizations.'],
+      ['Local by design', 'The chapter understands the town and can meet the people behind the business.'],
+      ['Yours when the work is finished', 'The business owns the finished work. There is no invoice and no retained ownership.'],
+    ],
+    cta: 'Get work for my business',
+    to: '/business',
+  },
+  student: {
+    label: 'For high schoolers',
+    eyebrow: 'A real proving ground',
+    title: 'Build work that gives you something specific to show.',
+    body:
+      'You lead a small team, work with real clients, and finish projects that matter outside school. The student support team provides training, review, and people to call when a project gets difficult.',
+    points: [
+      ['Portfolio and résumé', 'Leave with client work, clear responsibilities, and outcomes you can explain.'],
+      ['College applications', 'Show sustained leadership and local impact instead of another generic club title.'],
+      ['Skills under pressure', 'Practice AI tools, marketing, communication, project scoping, and team leadership.'],
+    ],
+    cta: 'Start a chapter',
+    to: '/chapter',
+  },
+}
+
+const OPERATING_MODEL = [
+  ['01', 'A business has a real need', 'A website, video, profile, or social presence that is missing or outdated.'],
+  ['02', 'A local chapter owns the relationship', 'Students scope the project, communicate with the client, and do the work.'],
+  ['03', 'The student support team provides support', 'Training, setup help, shared standards, weekly support, and quality review keep chapters aligned.'],
+  ['04', 'Both sides leave with value', 'The business keeps the finished work. Students keep the portfolio, skills, and leadership experience.'],
+]
+
+const STUDENT_OUTCOMES = [
+  ['Real clients', 'Learn to ask good questions, set a scope, respond to feedback, and finish what you promised.'],
+  ['Visible work', 'Build a portfolio around websites, videos, local search, and social work people can actually see.'],
+  ['Leadership', 'Recruit a team, divide responsibility, run check-ins, and keep a chapter active over time.'],
+  ['Local impact', 'Help small businesses that are often ignored or overcharged while improving your own town.'],
+]
+
+const PHASES = [
+  {
+    id: 'phase-1',
+    n: '01',
+    marker: 'East Brunswick, 2025',
+    title: 'It started with one chapter.',
+    body: [
+      'Small businesses deserve a real website, the kind normally priced for companies that can afford an agency. So a group of students did the work themselves and never charged for it.',
+    ],
+    image: '/about-work-session.webp',
+    imageAlt: 'SBI members working on laptops at the East Brunswick Public Library',
+  },
+  {
+    id: 'phase-2',
+    n: '02',
+    marker: 'Two people, every free hour',
+    title: 'Then we kept showing up.',
+    body: [
+      'That group was really just the two of us, building sites and shooting videos on free afternoons. Word got around fast.',
+    ],
+    showFounders: true,
+  },
+  {
+    id: 'phase-3',
+    n: '03',
+    marker: 'One town becomes many',
+    title: 'So we opened it up.',
+    body: [
+      'We were learning more doing this than in a classroom, which raised the obvious question: why keep it to one town?',
+      'Local teams now exist in East Brunswick, Guadalajara, and Simi Valley. Each chapter serves its own community while following the same shared process.',
+    ],
+  },
+]
+
+function Hero() {
+  return (
+    <Section
+      weight="anchor"
+      center
+      className="reference-glow flex items-center justify-center lg:hero-h"
+      backdrop={
+        <>
+          <ConstellationField
+            density={44}
+            reach={168}
+            className="opacity-[0.38] sm:opacity-[0.5]"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-white/[0.04]" />
+        </>
+      }
+    >
+      <div className="mx-auto max-w-[48rem] text-center">
+        <motion.p
+          initial={{ opacity: 1, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="flex items-center justify-center gap-3 font-mono text-label uppercase tracking-label text-gold-400"
+        >
+          <span className="h-px w-10 bg-gold-500/50" />
+          Why SBI exists
+        </motion.p>
+
+        <h1 className="mt-5 font-display text-display-xl font-bold leading-[0.92] tracking-[-0.055em] text-ink">
+          <SplitWords text="Free for businesses." delay={0.08} immediate />
+          <span className="block text-gold-400">
+            <SplitWords text="Real stakes for students." delay={0.18} immediate />
+          </span>
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 1, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
+          className="mx-auto mt-5 max-w-measure text-body leading-relaxed text-ink sm:text-body"
+        >
+          SBI is a student-run agency network. Local businesses get useful digital work at no
+          cost. High schoolers get real clients, real responsibility, and work worth showing.
+        </motion.p>
+
+        {/* Previously the only page-top on the site with no CTA at all. */}
+        <motion.div
+          initial={{ opacity: 1, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.62, ease: EASE }}
+          className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row"
+        >
+          <Cta to="/apply" size="lg" onClick={() => trackApply('about-hero')}>
+            Start my chapter
+          </Cta>
+          <Cta to="/business" tone="ghost" size="lg">
+            I own a business
+          </Cta>
+        </motion.div>
+      </div>
+    </Section>
+  )
+}
+
+function ValueExchange() {
+  const [active, setActive] = useState('business')
+  const perspective = PERSPECTIVES[active]
+
+  return (
+    <Section weight="anchor" bordered>
+      <SectionHead
+        weight="anchor"
+        kicker="One network, two outcomes"
+        title="Built for both sides of the work."
+        lede="Like a service marketplace, SBI connects a real business need with people ready to do the work. Unlike a marketplace, no money changes hands."
+        align="center"
+      />
+
+      <div
+        role="tablist"
+        aria-label="Choose an SBI perspective"
+        className="mx-auto mt-7 grid max-w-[38rem] grid-cols-2 rounded-full border border-[rgba(11,31,58,0.14)] bg-navy-50/70 p-1.5"
+      >
+        {Object.entries(PERSPECTIVES).map(([key, item]) => {
+          const selected = active === key
+          return (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              aria-controls="about-perspective-panel"
+              onClick={() => setActive(key)}
+              className={`focus-gold min-h-[46px] rounded-full px-4 text-body-sm font-semibold transition-all duration-300 ${
+                selected
+                  ? 'bg-navy-900 text-white shadow-[0_10px_28px_-16px_rgba(11,31,58,0.8)]'
+                  : 'text-ink-soft hover:text-ink'
+              }`}
+            >
+              {item.label}
+            </button>
+          )
+        })}
+      </div>
+
+      <motion.div
+        key={active}
+        id="about-perspective-panel"
+        role="tabpanel"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.42, ease: EASE }}
+        className="mt-7 grid overflow-hidden rounded-3xl border border-[rgba(11,31,58,0.14)] bg-white shadow-[0_24px_70px_-42px_rgba(11,31,58,0.45)] lg:grid-cols-[0.9fr_1.1fr]"
+      >
+        <div className="bg-navy-900 p-6 text-white sm:p-8 lg:p-10">
+          <p className="font-mono text-label uppercase tracking-label text-navy-300">
+            {perspective.eyebrow}
+          </p>
+          <h2 className="mt-3 max-w-head-lg font-display text-display-lg font-medium tracking-display text-white">
+            {perspective.title}
+          </h2>
+          <p className="mt-4 max-w-measure-narrow text-body text-white/72">{perspective.body}</p>
+          <div className="mt-7">
+            <Cta to={perspective.to} size="lg">
+              {perspective.cta}
+            </Cta>
+          </div>
+        </div>
+
+        <div className="grid divide-y divide-[rgba(11,31,58,0.1)] p-6 sm:p-8">
+          {perspective.points.map(([title, body], index) => (
+            <div key={title} className="grid gap-3 py-5 first:pt-0 last:pb-0 sm:grid-cols-[3rem_1fr]">
+              <span className="font-mono text-label tracking-label text-gold-400">
+                0{index + 1}
+              </span>
+              <div>
+                <h3 className="font-display text-display-sm font-medium tracking-display text-ink">{title}</h3>
+                <p className="mt-1.5 max-w-measure text-body-sm text-ink-soft">{body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </Section>
+  )
+}
+
+function OperatingModel() {
+  return (
+    <Section weight="support" bordered className="bg-canvas-elevated/55">
+      <SectionHead
+        weight="support"
+        kicker="The operating system"
+        title="The idea is simple. The operation is not."
+        lede="The visible result is a free website or video. Behind it is a coordinated chapter model designed to make the work reliable."
+        align="center"
+      />
+
+      <Stagger className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.08}>
+        {OPERATING_MODEL.map(([n, title, body]) => (
+          <Reveal key={n} stagger variant="up" className="h-full">
+            <article className="group h-full rounded-2xl border border-[rgba(11,31,58,0.12)] bg-white p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/40 hover:shadow-[0_18px_46px_-28px_rgba(11,31,58,0.45)]">
+              <span className="font-display text-display-lg font-medium leading-none tracking-display text-gold-500/28">
+                {n}
+              </span>
+              <h3 className="mt-5 font-display text-display-sm font-medium tracking-display text-ink">{title}</h3>
+              <p className="mx-auto mt-2 max-w-measure-narrow text-body-sm text-ink-soft">{body}</p>
+            </article>
+          </Reveal>
+        ))}
+      </Stagger>
+    </Section>
+  )
+}
+
+function StudentOutcomes() {
+  return (
+    <Section weight="anchor" bordered className="bg-navy-900">
+      <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+        <div>
+          <p className="font-mono text-label uppercase tracking-label text-navy-300">Why students join</p>
+          <h2 className="mt-3 max-w-head-lg font-display text-display-lg font-medium tracking-display text-white">
+            More useful than another club title.
+          </h2>
+          <p className="mt-4 max-w-measure-narrow text-body text-white/70">
+            SBI gives high schoolers a record of work, leadership, and community impact they can
+            discuss on a résumé or college application without pretending a title was the outcome.
+          </p>
+          <p className="mt-5 max-w-measure-narrow text-body-sm text-white/52">
+            It does not guarantee admission or a job. It gives you real experiences worth explaining.
+          </p>
+        </div>
+
+        <Stagger className="grid gap-4 sm:grid-cols-2" gap={0.08}>
+          {STUDENT_OUTCOMES.map(([title, body], index) => (
+            <Reveal key={title} stagger variant="up" className="h-full">
+              <article className="h-full rounded-2xl border border-white/12 bg-white/[0.055] p-5 transition-colors duration-300 hover:bg-white/[0.09]">
+                <span className="font-mono text-label tracking-label text-navy-300">
+                  0{index + 1}
+                </span>
+                <h3 className="mt-6 font-display text-display-sm font-medium tracking-display text-white">{title}</h3>
+                <p className="mt-2 text-body-sm text-white/65">{body}</p>
+              </article>
+            </Reveal>
+          ))}
+        </Stagger>
+      </div>
+    </Section>
+  )
+}
+
+function Narrative() {
+  return (
+    <Section weight="support" bordered>
+      <SectionHead
+        weight="support"
+        kicker="The origin"
+        title="One chapter became a network."
+        lede="The model started in East Brunswick, then opened up when the founders realized the learning and local impact should not stay in one town."
+        align="center"
+      />
+
+      <div className="mt-9 space-y-12 lg:space-y-16">
+          {PHASES.map((item) => (
+            <article key={item.id} id={item.id} className="scroll-mt-32">
+              <Reveal variant="up">
+                {/* A sticky 17rem rail used to carry this number on desktop.
+                    It left the entire left third of the page empty and pushed
+                    every story headline off the site's left edge, so the
+                    marker just sits inline at every width now. */}
+                <p className="font-mono text-label uppercase tracking-label text-gold-400">
+                  {item.n} · {item.marker}
+                </p>
+                <h2 className="mt-2.5 max-w-head-lg font-display text-display-lg font-medium tracking-display text-ink">
+                  {item.title}
+                </h2>
+              </Reveal>
+
+              <div className="mt-5 space-y-4">
+                {item.body.map((paragraph, i) => (
+                  <Reveal key={paragraph.slice(0, 24)} variant="up" delay={0.08 + i * 0.08}>
+                    <p className="max-w-measure text-body leading-relaxed text-ink">{paragraph}</p>
+                  </Reveal>
+                ))}
+              </div>
+
+              {item.image && (
+                <Reveal variant="scale" delay={0.15} className="mt-8">
+                  <Parallax speed={0.08}>
+                    <figure className="relative overflow-hidden rounded-2xl border border-[rgba(11,31,58,0.14)]">
+                      <img
+                        src={item.image}
+                        alt={item.imageAlt}
+                        width="1000"
+                        height="625"
+                        className="aspect-[16/10] w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-canvas/85 via-transparent to-transparent" />
+                      <figcaption className="absolute inset-x-0 bottom-0 p-5">
+                        <p className="font-mono text-label uppercase tracking-label text-gold-400">
+                          East Brunswick, New Jersey
+                        </p>
+                      </figcaption>
+                    </figure>
+                  </Parallax>
+                </Reveal>
+              )}
+
+              {item.showFounders && FOUNDERS.length > 0 && (
+                <Reveal variant="up" delay={0.15} className="mt-8">
+                  <div className="flex flex-wrap gap-4">
+                    {FOUNDERS.map((founder) => {
+                      const [w, h] = founder.photoSize ?? [600, 800]
+                      return (
+                        <figure key={founder.name} className="w-[10.5rem]">
+                          <img
+                            src={founder.photo}
+                            alt={founder.name}
+                            width={w}
+                            height={h}
+                            style={{ objectPosition: founder.photoPosition ?? '50% 30%' }}
+                            className="aspect-[3/4] w-full rounded-xl border border-[rgba(11,31,58,0.14)] object-cover"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <figcaption className="mt-2 font-display text-body-sm font-medium text-ink">
+                            {founder.name}
+                          </figcaption>
+                        </figure>
+                      )
+                    })}
+                  </div>
+                </Reveal>
+              )}
+            </article>
+          ))}
+      </div>
+    </Section>
+  )
+}
+
+/* The story used to run on "we" for 240 lines and then flip to "your town is
+   next" in the final heading. It turns to the reader here, before the ask.
+   The donate block that used to sit between the emotional peak and the CTA is
+   gone entirely - it rendered a permanently disabled button. */
+function Close() {
+  return (
+    <Section
+      weight="anchor"
+      bordered
+      backdrop={
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-navy-50/50" />
+        </>
+      }
+    >
+      <Reveal variant="blur">
+        <p className="font-mono text-label uppercase tracking-label text-gold-400">Phase 04</p>
+        <h2 className="mt-3 max-w-head font-display text-display-xl font-medium tracking-display text-ink">
+          Your town is next.
+        </h2>
+        <p className="mt-4 max-w-measure text-body leading-relaxed text-ink">
+          The next chapter is somebody reading this and deciding to start one.
+        </p>
+      </Reveal>
+      <Reveal variant="up" delay={0.18} className="mt-6 flex flex-col gap-4 sm:flex-row">
+          <Cta to="/apply" size="xl" onClick={() => trackApply('about-close')}>
+            Start my chapter
+          </Cta>
+        <Cta to="/business" tone="ghost" size="xl">
+          I own a business
+        </Cta>
+      </Reveal>
+    </Section>
+  )
+}
 
 export default function About() {
+  useDocumentMeta('about')
+
   return (
-    <div className="bg-canvas w-full overflow-hidden">
-      {/* Full Viewport Hero */}
-      <section className="relative isolate flex min-h-[90vh] items-center py-24 px-4 sm:px-6 md:px-12 lg:px-24">
-        <div className="absolute inset-0 network-grid opacity-35 pointer-events-none" />
-        {/* Editorial ambient glow */}
-        <div className="absolute top-1/3 left-0 w-full h-[500px] bg-gradient-to-r from-gold-500/10 via-transparent to-transparent blur-[120px] pointer-events-none" />
-        
-        <div className="w-full max-w-7xl mx-auto z-10">
-          <FadeIn>
-            <p className="font-mono text-[10px] tracking-[0.25em] text-gold-500 uppercase mb-8 flex items-center gap-3">
-              <span className="w-12 h-px bg-gold-500/50 block"></span>
-              Our Story
-            </p>
-          </FadeIn>
-          
-          <FadeIn delay={0.1}>
-            <h1 className="font-display text-[64px] leading-[1.05] tracking-[-0.04em] sm:text-[80px] md:text-[100px] lg:text-[120px] font-medium text-ink max-w-[900px] break-words">
-              Built by doing.
-            </h1>
-            <p className="font-display text-2xl md:text-4xl text-ink-soft mt-6 font-medium max-w-3xl">
-              Started in East Brunswick. Built from scratch.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Large Pull Quote */}
-      <section className="w-full bg-canvas-surface py-32 px-4 sm:px-6 relative overflow-hidden border-y border-white/5">
-        <div className="absolute inset-0 bg-gold-500/5 mix-blend-screen pointer-events-none" />
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <FadeIn>
-            <span className="text-gold-500 text-6xl md:text-8xl font-display leading-none block mb-8 opacity-50">"</span>
-            <blockquote className="font-display text-3xl md:text-5xl lg:text-[56px] leading-[1.1] font-medium text-ink tracking-tight">
-              We didn't pitch it. We just started building websites for our neighbors and eventually had to give it a name.
-            </blockquote>
-            <p className="font-mono text-sm tracking-widest text-gold-500 uppercase mt-12">
-              — Da'El Kim, CEO
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Alternating Story Layout */}
-      <section className="py-24 md:py-32 px-4 sm:px-6 bg-canvas">
-        <div className="max-w-7xl mx-auto space-y-32">
-          
-          {/* Story 1 */}
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            <FadeIn className="order-2 lg:order-1">
-              <div className="font-mono text-xs text-gold-500 uppercase tracking-widest mb-4">Phase 01</div>
-              <h2 className="font-display text-4xl md:text-5xl font-medium mb-6 text-ink">It started with EBSBI.</h2>
-              <div className="prose prose-invert prose-lg prose-p:text-ink-soft prose-p:leading-relaxed">
-                <p>
-                  SBI Network started with one chapter, EBSBI, built on a simple idea: small businesses deserve real
-                  branding, real websites, and real marketing — the kind usually reserved for companies that can afford
-                  agency prices. So a group of students decided to just do that work themselves, for free.
-                </p>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2} className="order-1 lg:order-2 h-full">
-              <div className="aspect-square bg-canvas-surface border border-white/10 rounded-2xl overflow-hidden relative group shadow-2xl">
-                <img
-                  src="/about-work-session.jpg"
-                  alt="EBSBI members working on laptops at the East Brunswick Public Library"
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-10" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                  <p className="font-mono text-xs uppercase tracking-widest text-gold-500">East Brunswick, NJ</p>
-                  <p className="font-display text-2xl font-medium text-ink mt-1">Est. 2025</p>
-                </div>
-              </div>
-            </FadeIn>
-          </div>
-
-          {/* Story 2 */}
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            <FadeIn className="order-1 h-full hidden lg:block">
-              <div className="aspect-square bg-canvas-elevated border border-white/5 rounded-2xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-2xl">
-                <div className="grid grid-cols-2 gap-8 w-full">
-                  <div>
-                    <span className="block font-display text-6xl text-gold-500 mb-2">2</span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">Original team</span>
-                  </div>
-                  <div>
-                    <span className="block font-display text-6xl text-gold-500 mb-2">1</span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">Year</span>
-                  </div>
-                  <div className="col-span-2 pt-8 border-t border-white/5">
-                    <span className="block font-display text-[80px] text-gold-500 mb-2">100+</span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">Hours Volunteered</span>
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2} className="order-2">
-              <div className="font-mono text-xs text-gold-500 uppercase tracking-widest mb-4">Phase 02</div>
-              <h2 className="font-display text-4xl md:text-5xl font-medium mb-6 text-ink">Then we kept showing up.</h2>
-              <div className="prose prose-invert prose-lg prose-p:text-ink-soft prose-p:leading-relaxed">
-                <p>
-                  That group was really just two of us, Da'El Kim and James Yu, building sites and shooting promo videos
-                  for local businesses whenever we had free time. Word got around fast, and pretty soon we were spending
-                  every free hour on it, figuring out branding for businesses that shouldn't have to settle for a bad
-                  website just because they couldn't afford an agency.
-                </p>
-              </div>
-            </FadeIn>
-          </div>
-
-          {/* Story 3 */}
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            <FadeIn className="order-2 lg:order-1">
-              <div className="font-mono text-xs text-gold-500 uppercase tracking-widest mb-4">Phase 03</div>
-              <h2 className="font-display text-4xl md:text-5xl font-medium mb-6 text-ink">One chapter becomes many.</h2>
-              <div className="prose prose-invert prose-lg prose-p:text-ink-soft prose-p:leading-relaxed">
-                <p>
-                  We noticed something else. We were learning more doing this than we ever did in a classroom. Real
-                  clients, real deadlines, real feedback. So we asked ourselves why this had to stay one chapter. If two
-                  students could do this for one town, a hundred students could do it for a hundred towns.
-                </p>
-                <p>
-                  That's the whole idea behind SBI Network. Every chapter is students doing what we did in their own town:
-                  building real skills by doing real work for the businesses down the street, for free. No corporate
-                  backing, no catch. Just people who'd rather build something than just talk about it.
-                </p>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2} className="order-1 lg:order-2 h-full">
-              <div className="aspect-[4/3] lg:aspect-square bg-canvas-surface border border-white/10 rounded-2xl flex items-center justify-center text-center shadow-2xl relative">
-                <div className="font-display text-[120px] md:text-[180px] font-medium text-gold-500/20 select-none">
-                  1<span className="text-gold-500/40 text-[60px] md:text-[80px] align-middle mx-4">&rarr;</span>&infin;
-                </div>
-              </div>
-            </FadeIn>
-          </div>
-          
-        </div>
-      </section>
-
-      {/* Mission Statement Standalone */}
-      <section className="py-32 px-4 sm:px-6 bg-canvas-surface border-y border-white/5 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(21,46,82,0.4),transparent)] relative">
-        <div className="mx-auto max-w-5xl text-center relative z-10">
-          <FadeIn>
-            <h2 className="mx-auto mb-8 max-w-4xl text-balance font-display text-[clamp(2.35rem,6vw,4rem)] font-medium leading-[1.06] tracking-[-0.045em] text-ink">
-              <span className="mx-auto block max-w-3xl">
-                Every student deserves real experience.
-              </span>
-              <span className="relative mx-auto mt-7 block max-w-3xl pb-4">
-                Every business deserves a real website.
-                <span className="absolute bottom-0 left-1/2 h-1 w-24 -translate-x-1/2 rounded-full bg-gold-500/80 sm:w-36" />
-              </span>
-            </h2>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Donation Section */}
-      <section id="donate" className="scroll-mt-28 py-32 px-4 sm:px-6 bg-canvas relative isolate">
-        <div className="pointer-events-none absolute inset-0 network-grid opacity-20" />
-        <div className="max-w-3xl mx-auto text-center">
-          <FadeIn>
-            <div className="font-mono text-xs text-gold-500 uppercase tracking-widest mb-6">Support</div>
-            <h2 className="font-display text-4xl md:text-5xl font-medium mb-6 text-ink">Support the mission.</h2>
-            <p className="text-ink-soft text-lg mb-10 leading-relaxed">
-              SBI is entirely student-run and free for every business we serve. If you believe in what we're building, even a small contribution helps us grow.
-            </p>
-            
-              <div className="inline-flex flex-col items-center rounded-xl border border-gold-500/20 bg-canvas-elevated p-2">
-                <button
-                  disabled
-                  title="A secure donation page has not been provided yet"
-                  className="rounded bg-gold-500 px-10 py-4 text-[15px] font-medium text-canvas opacity-70 cursor-not-allowed w-full sm:w-auto"
-              >
-                Donate
-              </button>
-                <span className="mt-4 font-mono text-center text-[10px] tracking-widest uppercase text-muted">
-                  Preview — secure donation link awaiting approval.
-              </span>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Dual CTA */}
-      <section className="py-24 px-4 sm:px-6 bg-canvas-surface border-t border-white/5 text-center">
-        <FadeIn>
-          <h2 className="font-display text-3xl font-medium tracking-tight mb-10">Get Involved</h2>
-          <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <Link
-              to="/business"
-              className="inline-flex items-center justify-center rounded bg-gold-500 px-8 py-4 text-[15px] font-medium text-canvas transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 shadow-[0_0_32px_rgba(192,155,45,0.25)] hover:shadow-[0_0_40px_rgba(192,155,45,0.4)]"
-            >
-              Own a business?
-            </Link>
-            <Link
-              to="/chapter"
-              className="inline-flex items-center justify-center rounded border border-white/20 px-8 py-4 text-[15px] font-medium text-ink transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-            >
-              Want to lead?
-            </Link>
-          </div>
-        </FadeIn>
-      </section>
-
-       <StickyMobileCta href="/business" label="Find Business Support" />
+    <div className="w-full bg-canvas">
+      <Hero />
+      <ValueExchange />
+      <OperatingModel />
+      <StudentOutcomes />
+      <Narrative />
+      <Close />
+      <StickyMobileCta
+        href="/apply"
+        label="Start my chapter"
+        onClick={() => trackApply('sticky-about')}
+      />
     </div>
   )
 }

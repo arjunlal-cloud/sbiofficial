@@ -1,247 +1,331 @@
-import ChapterMap from '../components/ChapterMap'
+import { useEffect, useRef } from 'react'
+import { Link } from 'wouter'
+import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion'
 import Accordion from '../components/Accordion'
+import Cta from '../components/Cta'
+import ConstellationField from '../components/ConstellationField'
 import StickyMobileCta from '../components/StickyMobileCta'
-import sop from '../data/sop.jsx'
-import glossary from '../data/glossary.json'
-import chapters from '../data/chapters.json'
-import { FadeIn, StaggerContainer } from '../components/FadeIn'
-import { CONTACT_EMAIL } from '../components/Layout'
+import { Reveal, Stagger, SplitWords, EASE } from '../components/motion/Reveal'
+import Section from '../components/Section'
+import SectionHead from '../components/motion/SectionHead'
+import { initScrollDepth, trackApply } from '../lib/analytics'
+import { useDocumentMeta } from '../lib/meta'
 
-const APPLY_FORM_URL = 'https://docs.google.com/forms/d/1v1HwPRPeFm87FyT4HGVMMnwyHFn6khd_Z-j2XFp2Y1Q/viewform'
+/**
+ * The conversion page. Five sections, under 300 words of body copy.
+ *
+ * Everything that used to live here as its own section is either folded in
+ * (the commitment sits inside step four of the path, the "why not start your
+ * own thing" argument is two sentences in the hero) or moved out (the services
+ * grid, the territory map, the full FAQ, the operations manual).
+ */
 
-const ApplyButton = ({ children, className = "" }) => (
-  <a
-    href={APPLY_FORM_URL}
-    target={APPLY_FORM_URL.startsWith('http') ? '_blank' : undefined}
-    rel="noreferrer"
-    className={`inline-flex items-center justify-center rounded bg-gold-500 px-8 py-4 text-[15px] font-medium text-canvas transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 shadow-[0_0_32px_rgba(192,155,45,0.25)] hover:shadow-[0_0_40px_rgba(192,155,45,0.4)] ${className}`}
-  >
-    {children}
-  </a>
-)
+const APPLY_LABEL = 'Start my chapter'
+const APPLY_NOTE = 'Six questions, under two minutes.' // TODO: confirm the form is six questions and time it.
 
-const glossaryGroups = [
+const STEPS = [
+  ['01', 'Find a business that needs the work', 'A restaurant with no website. A barber whose Google hours are wrong.'],
+  ['02', 'Build it with your team', 'You agree the scope and split the work. The student support team checks it before it ships.'],
+  ['03', 'Give it to the business free', 'The business owns it outright. You keep the portfolio piece.'],
+]
+
+const PATH = [
   {
-    title: 'Chapter foundations',
-    terms: ['Chartered', 'HQ', 'Chapter Leader', 'Chapter Boundaries', 'Deactivation'],
+    step: '01',
+    title: 'Apply',
+    body: 'Two people, and neither of you needs to code. Tell us your town and why you want to lead.',
   },
   {
-    title: 'Client delivery team',
-    terms: ['Coder', 'Cameraman', 'Editor', 'Marketer'],
+    step: '02',
+    title: 'Talk to the student support team',
+    // TODO: confirm the typical wait between applying and this conversation.
+      body: (
+      <>
+          Student recruitment and setup leads answer questions, set expectations, and approve chapters they think will still be running in six months.
+      </>
+    ),
   },
   {
-    title: 'HQ support roles',
-    terms: ['Quality Lead', 'Recruitment Lead', 'Onboarding Lead', 'Support Lead'],
+    step: '03',
+    title: 'Set your service area',
+    body: (
+      <>
+        The student support team sets your service area. There is one chapter per town, and the
+        first approved chapter keeps any overlapping area.
+      </>
+    ),
+  },
+  {
+    step: '04',
+    title: 'Train, then deliver',
+    // TODO: confirm how long onboarding plus both training sessions takes end to end.
+        body: 'You get web and video training, then start with a supported client project. The commitment is two delivered projects a month.',
   },
 ]
 
-export default function Chapter() {
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-      el.setAttribute('open', 'true');
-    }
-  };
+const FAQ = [
+  {
+    q: 'How much time per week?',
+    // TODO: confirm the real weekly hour range with the support team and put a number here.
+    a: 'Two delivered projects a month, a weekly check-in, and one monthly meeting. Miss the two-project target three months running and the chapter closes.',
+  },
+  {
+    q: 'What does it cost me?',
+    a: 'Nothing. The one expense is a shared Claude Pro subscription, about $20 a month, usually covered by a GoFundMe.',
+  },
+  {
+    q: 'Do I need experience?',
+    a: 'No. The site work is done with AI tools, and the student support team trains you before your first client.',
+  },
+]
+
+/* 1 - Hero */
+function Hero() {
+  return (
+    <Section
+      weight="anchor"
+      center
+      className="reference-glow flex items-center justify-center lg:hero-h"
+      backdrop={
+        <>
+          <ConstellationField density={34} reach={164} className="opacity-[0.28] sm:opacity-[0.36]" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-navy-50/60" />
+        </>
+      }
+    >
+      <div className="mx-auto max-w-[48rem] text-center">
+        <motion.p
+          initial={{ opacity: 1, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="flex items-center justify-center gap-3 font-mono text-label uppercase tracking-label text-gold-400"
+        >
+          <span className="h-px w-10 bg-gold-500/50" />
+          For future chapter leaders
+        </motion.p>
+
+        <h1 className="mx-auto mt-3 max-w-head font-display text-display-xl font-bold tracking-[-0.055em] text-ink sm:mt-5">
+          <SplitWords text="Run a local team" delay={0.06} immediate />
+          <span className="block text-ink-soft">
+            <SplitWords text="in your town." delay={0.18} immediate />
+          </span>
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 1, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+          className="mx-auto mt-3 max-w-measure-narrow text-body-lg text-ink"
+        >
+          <strong className="font-semibold">You start a chapter</strong> and lead a small team
+          building websites and promo videos for local businesses, free. The student support team
+          trains you first.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 1, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.46, ease: EASE }}
+          className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+        >
+          <Cta to="/apply" size="xl" onClick={() => trackApply('hero')}>
+            {APPLY_LABEL}
+          </Cta>
+          {/* The manual used to be linked once, at the very bottom. Both the
+              form and the reference are one tap from the top now. */}
+          <Cta to="/manual" tone="ghost" size="xl" arrow="→">
+            Read the manual
+          </Cta>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.58 }}
+          className="mt-3 text-body-sm text-ink-soft"
+        >
+          Free. No coding experience. High school students only.
+        </motion.p>
+      </div>
+    </Section>
+  )
+}
+
+/* 2 - What you actually do */
+function Steps() {
+  return (
+    <Section weight="support" bordered>
+      <SectionHead weight="support" title="What you actually do." />
+
+      <Stagger className="mt-5 grid gap-5 md:grid-cols-3 md:gap-8" gap={0.1}>
+          {STEPS.map(([n, title, body]) => (
+            <Reveal key={n} stagger variant="wake">
+              <div className="border-t border-[rgba(11,31,58,0.14)] pt-4">
+                <span className="font-display text-display-lg font-medium leading-none tracking-display text-gold-500/30">
+                  {n}
+                </span>
+                <h3 className="mt-3 font-display text-display-sm font-medium tracking-display text-ink">
+                  {title}
+                </h3>
+                <p className="mt-2 max-w-measure-narrow text-body-sm text-ink-soft">{body}</p>
+              </div>
+          </Reveal>
+        ))}
+      </Stagger>
+    </Section>
+  )
+}
+
+/* 3 - What happens after you apply */
+function Path() {
+  const ref = useRef(null)
+  const reduced = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 70%', 'end 60%'] })
+  const scaleY = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 })
 
   return (
-    <div className="bg-canvas w-full overflow-hidden">
-      {/* Hero */}
-      <section className="py-24 md:py-32 px-4 sm:px-6 text-center border-b border-white/5 relative isolate">
-        <div className="pointer-events-none absolute inset-0 network-grid opacity-25" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-canvas-surface to-canvas -z-10" />
-        <div className="mx-auto max-w-4xl">
-          <FadeIn>
-            <p className="font-mono text-[10px] tracking-widest text-gold-500 uppercase mb-6 flex items-center justify-center gap-3">
-               <span className="w-8 h-px bg-gold-500/40 inline-block" /> For future chapter leaders <span className="w-8 h-px bg-gold-500/40 inline-block" />
-            </p>
-            <h1 className="font-display text-4xl leading-[1.1] sm:text-5xl md:text-7xl font-medium tracking-tight mb-6">
-              Start an agency.<br />
-              <span className="text-ink-soft">Build real skills.</span>
-            </h1>
-            <p className="mx-auto max-w-2xl text-[17px] leading-relaxed text-ink-soft mb-10">
-              Join a network of students helping local businesses. Learn marketing, web development, and leadership — completely hands-on with real clients.
-            </p>
-            <ApplyButton>Apply to Start a Chapter</ApplyButton>
-          </FadeIn>
-        </div>
-      </section>
+    <Section weight="anchor" bordered>
+      <SectionHead
+        weight="anchor"
+        kicker="Application to first client"
+        title="What happens after you apply."
+      />
 
-      {/* SOP Section */}
-      <section className="py-24 px-4 sm:px-6 bg-canvas relative z-10 overflow-x-hidden">
-        <div className="mx-auto w-full min-w-0 max-w-4xl">
-          <FadeIn>
-            <div className="mb-8 text-center md:text-left">
-              <span className="font-mono text-[10px] tracking-widest text-gold-500 uppercase mb-4 block flex items-center justify-center md:justify-start gap-3">
-                <span className="w-8 h-px bg-gold-500/40 inline-block hidden md:block" /> Master Manual
-              </span>
-              <h2 className="font-display text-4xl md:text-5xl font-medium tracking-tight mb-4">Chapter Operations Guide</h2>
-              <p className="text-ink-soft text-base leading-relaxed sm:text-lg">
-                A clear guide to starting and running a chapter. Dotted{' '}
-                <span className="font-medium text-gold-400 underline decoration-gold-500/40 decoration-dotted decoration-2 underline-offset-4">
-                  terms
-                </span>{' '}
-                show a definition on hover.
-              </p>
-            </div>
-          </FadeIn>
+      <div ref={ref} className="relative mt-7 pl-7 sm:pl-9">
+          <div className="absolute bottom-2 left-[7px] top-2 w-px bg-[rgba(11,31,58,0.14)] sm:left-[9px]" />
+          <motion.div
+            className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-gradient-to-b from-gold-400 to-gold-600 sm:left-[9px]"
+            style={reduced ? { scaleY: 1 } : { scaleY }}
+          />
 
-          {/* Index Pills */}
-          <FadeIn delay={0.1}>
-            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-6 mb-8 snap-x scrollbar-hide hide-scrollbar sm:mx-0 sm:px-0">
-              {sop.map((s, i) => (
-                <button
-                  key={`pill-${s.id}`}
-                  onClick={() => scrollToSection(s.id)}
-                  className="snap-start shrink-0 inline-flex items-center gap-2 rounded-full border border-white/10 bg-canvas-surface px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-gold-500/50 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-                >
-                  <span className="font-mono text-[10px] text-gold-500 uppercase">0{i + 1}</span>
-                  {s.title.split(' ').slice(0, 3).join(' ')}{s.title.split(' ').length > 3 ? '...' : ''}
-                </button>
-              ))}
-            </div>
-          </FadeIn>
-
-          <StaggerContainer className="min-w-0 space-y-6">
-            {sop.map((s, i) => (
-              <FadeIn key={s.id} stagger delay={i * 0.05} className="min-w-0">
-                <Accordion
-                  id={s.id}
-                  title={s.title}
-                  defaultOpen={s.defaultOpen}
-                  indexNumber={`0${i + 1}`}
-                >
-                  {s.content}
-                </Accordion>
-              </FadeIn>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
-
-      {/* Map Section - 2 Column Layout */}
-      <section className="py-24 px-4 sm:px-6 bg-canvas-surface">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid min-w-0 gap-12 md:grid-cols-[minmax(0,35fr)_minmax(0,65fr)] lg:gap-16">
-            {/* Left Column */}
-            <div className="flex min-w-0 flex-col gap-6">
-              <FadeIn>
-                <h2 className="font-display text-3xl font-medium">Network Coverage</h2>
-                <p className="text-ink-soft mt-2 text-sm leading-relaxed mb-6">
-                  See where chapters already exist — or claim your territory by starting one in your town.
-                </p>
-              </FadeIn>
-              
-              <StaggerContainer className="flex flex-col gap-4">
-                {chapters.map(c => (
-                  <FadeIn key={c.id} stagger>
-                    <div className="bg-canvas rounded-xl p-6 border-l-4 border-l-gold-500 border border-white/5 shadow-xl">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-display text-xl font-medium text-ink break-words">{c.name}</h3>
-                        <span className="font-mono text-[10px] text-muted tracking-widest uppercase">{c.abbreviation}</span>
-                      </div>
-                      <p className="text-xs text-ink-soft mb-2">{c.description}</p>
-                       {c.leader && (
-                         <p className="mb-2 text-xs text-ink-soft">Chapter lead: <span className="text-ink">{c.leader}</span></p>
-                       )}
-                      
-                      <div className="mb-4">
-                        <span className="font-mono text-[10px] text-gold-500 uppercase tracking-widest">{c.radius}</span>
-                      </div>
-                      
-                      <div className="mb-6">
-                        <span className="font-mono text-[10px] text-gold-500 tracking-widest uppercase block mb-2">Capabilities</span>
-                        <div className="flex flex-wrap gap-2">
-                          {c.services.map(s => (
-                            <span key={s} className="px-2 py-1 rounded-sm bg-white/5 text-xs text-ink-soft border border-white/5">{s}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </FadeIn>
-                ))}
-              </StaggerContainer>
-
-              <FadeIn delay={0.3}>
-                <div className="mt-4 p-6 rounded-xl border border-white/5 bg-canvas-elevated text-center">
-                  <p className="text-sm text-ink-soft mb-3">Ready to claim your area?</p>
-                  <a
-                    href={APPLY_FORM_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-mono text-xs tracking-widest text-gold-500 uppercase hover:text-gold-400 underline decoration-gold-500/30 underline-offset-4 block"
-                  >
-                    Start an application
-                  </a>
+          <div className="space-y-5">
+            {PATH.map((item) => (
+              <Reveal key={item.step} variant="left">
+                <div className="relative">
+                  <span className="absolute -left-7 top-1.5 grid h-[15px] w-[15px] place-items-center rounded-full border border-gold-500/60 bg-canvas sm:-left-9 sm:h-[19px] sm:w-[19px]">
+                    <span className="h-[5px] w-[5px] rounded-full bg-gold-400 sm:h-[6px] sm:w-[6px]" />
+                  </span>
+                  <span className="font-mono text-label tracking-label text-gold-400">
+                    {item.step}
+                  </span>
+                  <h3 className="mt-1 font-display text-display-sm font-medium tracking-display text-ink">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 max-w-measure text-body text-ink">{item.body}</p>
                 </div>
-              </FadeIn>
-            </div>
-
-            {/* Right Column */}
-            <FadeIn delay={0.2} className="h-full min-h-[500px] min-w-0">
-              <div className="h-[min(600px,70vh)] min-h-96 w-full md:sticky md:top-24">
-                <ChapterMap />
-              </div>
-            </FadeIn>
+              </Reveal>
+            ))}
           </div>
         </div>
-      </section>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+        {/* HqStrip, reduced to one line and a link. */}
+        <Reveal variant="up" className="mt-7 border-t border-[rgba(11,31,58,0.14)] pt-5">
+          <p className="max-w-measure text-body-sm text-ink-soft">
+            Steps two to four are supported by SBI students: training, quality review, and someone
+            to message when a project goes sideways.{' '}
+            <Link
+              href="/team"
+              className="focus-gold rounded-sm text-gold-400 underline decoration-gold-500/40 underline-offset-4 transition-colors hover:text-gold-300"
+              data-testid="link-chapter-team"
+            >
+              See the team
+            </Link>
+            .
+          </p>
+          {/* Territory used to be a section of its own, stranded between two
+              rules with a headline for two sentences. It belongs to step 03,
+              so it sits inside this section -- but at body weight, not folded
+              into the dim support-team line above, because "your town is open" is the
+              reassurance that decides it for a lot of people. */}
+          <p className="mt-4 max-w-measure text-body text-ink">
+            <strong className="font-semibold">One chapter per town, and yours is almost
+            certainly open.</strong> Once your chapter is approved, another chapter cannot take
+            over its service area.
+          </p>
+      </Reveal>
+    </Section>
+  )
+}
 
-      {/* Glossary Section */}
-      <section className="pb-24 px-4 sm:px-6 bg-canvas">
-        <div className="mx-auto max-w-4xl">
-          <FadeIn>
-            <Accordion title="Glossary" id="glossary">
-              <p className="mb-7 max-w-2xl text-sm leading-relaxed text-ink-soft">
-                A quick reference for the people, roles, and chapter terms used throughout the guide.
-              </p>
-              <div className="space-y-8">
-                {glossaryGroups.map((group) => (
-                  <section key={group.title} aria-labelledby={`glossary-${group.title}`}>
-                    <h3
-                      id={`glossary-${group.title}`}
-                      className="mb-3 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-500"
-                    >
-                      <span className="h-px w-6 bg-gold-500/40" aria-hidden="true" />
-                      {group.title}
-                    </h3>
-                    <dl className="grid gap-3 sm:grid-cols-2">
-                      {group.terms.map((term) => {
-                        const entry = glossary.find((g) => g.term === term)
-                        if (!entry) return null
-                        return (
-                          <div
-                            key={entry.term}
-                            className="rounded-xl border border-white/8 bg-canvas/60 px-4 py-4 sm:px-5 sm:py-5"
-                          >
-                            <dt className="font-display text-[15px] font-semibold leading-snug text-gold-400">{entry.term}</dt>
-                            <dd className="mt-2 text-[14px] leading-6 text-ink-soft">{entry.definition}</dd>
-                          </div>
-                        )
-                      })}
-                    </dl>
-                  </section>
-                ))}
-              </div>
+/* 5 - The three questions everyone asks */
+function Questions() {
+  return (
+    <Section weight="support" bordered>
+      <SectionHead weight="support" title="Before you apply." />
+      <div className="mt-4">
+        {FAQ.map((item, i) => (
+          <Reveal key={item.q} variant="up" delay={Math.min(i * 0.04, 0.12)}>
+            <Accordion title={item.q} indexNumber={String(i + 1).padStart(2, '0')}>
+              <p className="max-w-measure">{item.a}</p>
             </Accordion>
-          </FadeIn>
-        </div>
-      </section>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  )
+}
 
-      {/* Bottom CTA */}
-      <section className="py-24 md:py-32 px-4 sm:px-6 bg-canvas-surface text-center border-t border-white/5 relative bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(21,46,82,0.4),transparent)]">
-        <FadeIn className="relative z-10">
-          <h2 className="font-display text-4xl md:text-5xl font-medium tracking-tight mb-4">Ready to lead?</h2>
-          <p className="text-ink-soft mb-10 text-lg max-w-lg mx-auto">Two people and some drive is all it takes to start. We provide the rest.</p>
-          <ApplyButton>Submit Application</ApplyButton>
-        </FadeIn>
-      </section>
+/* 6 - Apply. This page owns "Two people. One town." */
+function Apply() {
+  return (
+    <Section
+      weight="anchor"
+      bordered
+      backdrop={
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-navy-50/50" />
+        </>
+      }
+    >
+      <Reveal variant="blur">
+        <h2 className="max-w-head-lg font-display text-display-xl font-medium tracking-display text-ink">
+          Two people. One town.
+        </h2>
+        <p className="mt-4 max-w-measure-narrow text-body-lg text-ink">
+          That&rsquo;s the whole entry requirement.
+        </p>
+      </Reveal>
 
-      <StickyMobileCta href={APPLY_FORM_URL} label="Apply to Lead a Chapter" />
+      <Reveal variant="up" delay={0.15} className="mt-6">
+        <Cta to="/apply" size="xl" onClick={() => trackApply('close')}>
+          {APPLY_LABEL}
+        </Cta>
+      </Reveal>
+
+      <Reveal variant="up" delay={0.22}>
+        <p className="mt-4 max-w-measure text-body-sm text-ink-soft">
+          {APPLY_NOTE}{' '}
+          <Link
+            href="/manual"
+            className="focus-gold rounded-sm text-gold-400 underline decoration-gold-500/40 underline-offset-4 transition-colors hover:text-gold-300"
+            data-testid="link-chapter-manual"
+          >
+            Read the manual
+          </Link>
+          .
+        </p>
+      </Reveal>
+    </Section>
+  )
+}
+
+export default function Chapter() {
+  useDocumentMeta('chapter')
+
+  useEffect(() => initScrollDepth('chapter'), [])
+
+  return (
+    <div className="w-full bg-canvas">
+      <Hero />
+      <Steps />
+      <Path />
+      <Questions />
+      <Apply />
+      <StickyMobileCta
+        href="/apply"
+        label={APPLY_LABEL}
+        onClick={() => trackApply('sticky')}
+      />
     </div>
   )
 }

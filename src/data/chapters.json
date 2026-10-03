@@ -1,23 +1,59 @@
 [
   {
     "id": "ebsbi",
-    "name": "East Brunswick SBI",
+    "name": "East Brunswick",
     "abbreviation": "EBSBI",
-    "location": { "lat": 40.438555, "lng": -74.392598 },
+    "location": {
+      "lat": 40.438555,
+      "lng": -74.392598
+    },
     "radius": "5 miles",
-    "services": ["Websites", "Promo Videos", "GBP Optimization", "Social Media"],
+    "services": [
+      "Websites",
+      "Promo videos",
+      "Google Business Profile",
+      "Social media"
+    ],
     "contact": "ebsbi.official@gmail.com",
-    "description": "Serving East Brunswick and surrounding areas"
+    "description": "Serving East Brunswick and the towns around it.",
+    "region": "New Jersey"
   },
   {
     "id": "gjsbi",
-    "name": "Guadalajara, Mexico",
+    "name": "Guadalajara",
     "abbreviation": "GJSBI",
     "leader": "Pedro Baltazar",
-    "location": { "lat": 20.6597, "lng": -103.3496 },
+    "location": {
+      "lat": 20.6597,
+      "lng": -103.3496
+    },
     "radius": "5 miles",
-    "services": ["Websites", "Promo Videos", "GBP Optimization", "Social Media"],
+    "services": [
+      "Websites",
+      "Promo videos",
+      "Google Business Profile",
+      "Social media"
+    ],
     "contact": null,
-    "description": "Serving Guadalajara and surrounding areas"
+    "description": "Serving Guadalajara and the areas around it.",
+    "region": "Mexico"
+  },
+  {
+    "id": "svsbi",
+    "name": "Simi Valley",
+    "abbreviation": "SVSBI",
+    "location": {
+      "lat": 34.2694,
+      "lng": -118.7815
+    },
+    "radius": "5 miles",
+    "services": [
+      "Websites",
+      "Google Business Profile",
+      "Social media"
+    ],
+    "contact": "arjun.aditya.lal@gmail.com",
+    "description": "Serving Simi Valley and nearby communities.",
+    "region": "California"
   }
 ]

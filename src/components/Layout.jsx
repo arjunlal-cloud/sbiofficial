@@ -1,44 +1,45 @@
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import SBIGuide from './SBIGuide'
+import { Link, useLocation } from 'wouter'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { Wordmark } from './Brand'
 
 const CONTACT_EMAIL = 'ebsbi.official@gmail.com'
 
-const navLink = ({ isActive }) =>
-  `rounded-md px-3 py-2 text-[13px] font-mono tracking-widest uppercase transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 ${
-    isActive ? 'text-gold-400' : 'text-ink hover:text-gold-300'
+const NAV = [
+  { to: '/', label: 'Home' },
+  { to: '/about', label: 'About' },
+  { to: '/chapter', label: 'For students' },
+  { to: '/business', label: 'For businesses' },
+  { to: '/team', label: 'Our team' },
+]
+
+const NAV_LEFT = NAV.filter((item) => ['/', '/chapter', '/business'].includes(item.to))
+const NAV_RIGHT = NAV.filter((item) => ['/about', '/team'].includes(item.to))
+
+const EXTRA_NAV = [
+  { to: '/manual', label: 'Chapter leader guide' },
+  { to: '/apply', label: 'Application' },
+]
+
+const navLink = (isActive) =>
+  `flex min-h-[44px] items-center whitespace-nowrap rounded-full px-4 text-sm font-medium transition-colors duration-300 ${
+    isActive ? 'text-navy-900 bg-canvas-elevated' : 'text-ink-soft hover:text-navy-900 hover:bg-canvas-elevated/50'
   }`
 
-/**
- * Inline logo — rendered via React so Space Grotesk loads correctly.
- * LOGO PLACEHOLDER: replace this with <img src="/logo.svg"> once the real
- * vector logo file is delivered. Until then this wordmark is the brand mark.
- */
-function SBILogo() {
-  return (
-    <span className="inline-flex items-center gap-1.5 font-display font-bold tracking-tight whitespace-nowrap select-none leading-none">
-      <span className="text-[22px] text-ink">SBI</span>
-      {/* Growth-line mark */}
-      <svg width="13" height="17" viewBox="0 0 13 17" fill="none" aria-hidden="true" className="shrink-0 mt-[1px]">
-        <rect x="0" y="11" width="2.5" height="6" rx="1.25" fill="#c09b2d"/>
-        <line x1="1.25" y1="11" x2="13" y2="0" stroke="#c09b2d" strokeWidth="2" strokeLinecap="round"/>
-        <polyline points="7,0 13,0 13,6" stroke="#c09b2d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-      </svg>
-      <span className="text-[22px] text-gold-500">Network</span>
-    </span>
-  )
-}
-
-export default function Layout() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+export default function Layout({ children }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const location = useLocation()
+  const [location] = useLocation()
+  const menuRef = useRef(null)
+  const toggleRef = useRef(null)
 
-  // Close mobile menu on route change
+  const closeMenu = useCallback(() => setIsMenuOpen(false), [])
+
   useEffect(() => {
-    setIsMobileMenuOpen(false)
-    if (!location.hash) window.scrollTo(0, 0)
-  }, [location.pathname, location.hash])
+    closeMenu()
+    if (!window.location.hash) window.scrollTo(0, 0)
+  }, [location, closeMenu])
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
     onScroll()
@@ -46,109 +47,211 @@ export default function Layout() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    if (!isMenuOpen) return undefined
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeMenu()
+        toggleRef.current?.focus()
+        return
+      }
+      if (event.key !== 'Tab' || !menuRef.current) return
+
+      const focusables = menuRef.current.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+      if (!focusables.length) return
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    const onPointerDown = (event) => {
+      if (menuRef.current?.contains(event.target)) return
+      if (toggleRef.current?.contains(event.target)) return
+      closeMenu()
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointerDown)
+    menuRef.current?.querySelector('a, button')?.focus()
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('pointerdown', onPointerDown)
+    }
+  }, [isMenuOpen, closeMenu])
+
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-canvas text-ink font-body selection:bg-gold-500/30 overflow-hidden">
-      {/* Noise grain overlay */}
-      <div 
-        className="pointer-events-none fixed inset-0 z-[100] h-full w-full opacity-[0.04] mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '200px 200px'
-        }}
-      />
-      
-      <header className="fixed inset-x-0 top-3 z-50 px-3 sm:top-5 sm:px-5">
-        <nav className={`mx-auto flex max-w-6xl items-center justify-between rounded-2xl border px-4 shadow-xl backdrop-blur-xl transition-all duration-300 sm:px-5 ${scrolled ? 'border-gold-500/30 bg-canvas/95 py-2.5 shadow-black/40' : 'border-white/10 bg-canvas/80 py-3.5'}`}>
-          <Link
-            to="/enter"
-            className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-sm shrink-0"
-          >
-            <span className="relative"><SBILogo /><span className="absolute -bottom-3 left-0 font-mono text-[7px] uppercase tracking-[0.18em] text-gold-500/70">Preview mark</span></span>
-          </Link>
-          
-          <div className="hidden md:flex flex-wrap items-center justify-end gap-1">
-            <NavLink to="/business" onClick={() => setIsMobileMenuOpen(false)} className={navLink}>For Businesses</NavLink>
-            <NavLink to="/chapter" onClick={() => setIsMobileMenuOpen(false)} className={navLink}>Start a Chapter</NavLink>
-            <NavLink to="/team" onClick={() => setIsMobileMenuOpen(false)} className={navLink}>Team</NavLink>
-            <NavLink to="/about" onClick={() => setIsMobileMenuOpen(false)} className={navLink}>Our Story</NavLink>
-            <Link
-              to="/business"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="ml-3 rounded-xl bg-gold-500 px-4 py-2.5 text-xs font-mono uppercase tracking-widest text-canvas transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-            >
-              Business Support
-            </Link>
-            <Link
-              to="/about#donate"
-              className="rounded-xl border border-gold-500/45 px-4 py-2.5 text-xs font-mono uppercase tracking-widest text-gold-300 transition-colors hover:bg-gold-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-            >
-              Donate
-            </Link>
+    <div className="flex min-h-[100dvh] flex-col bg-canvas font-body text-ink selection:bg-gold-200/50">
+      <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-8">
+        <nav
+          className={`relative mx-auto grid max-w-5xl grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-full border border-canvas-border px-3 transition-all duration-500 sm:px-4 ${
+            scrolled
+              ? 'bg-white/95 py-3 shadow-lg shadow-navy-900/5 backdrop-blur-xl'
+              : 'bg-white/80 py-4 shadow-sm backdrop-blur-md'
+          }`}
+        >
+          <div className="flex min-w-0 items-center justify-start">
+            <div className="hidden items-center gap-0.5 lg:flex">
+              {NAV_LEFT.map((item) => {
+                const isActive = item.to === '/' ? location === '/' : location.startsWith(item.to)
+                return (
+                  <Link key={item.to} href={item.to} className={navLink(isActive)}>
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
 
-          <button 
-            className="md:hidden p-2 text-ink-soft hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
+          <Link
+            href="/"
+            className="flex min-h-[44px] shrink-0 items-center justify-center rounded-full px-2"
+            aria-label="SBI home"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {isMobileMenuOpen ? (
-                <path d="M18 6L6 18M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </nav>
-        
-        {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden absolute left-3 right-3 top-[calc(100%+0.5rem)] flex flex-col gap-4 rounded-2xl border border-white/10 bg-canvas-surface/95 px-4 py-4 shadow-2xl backdrop-blur-xl">
-            <NavLink to="/business" className={navLink}>For Businesses</NavLink>
-            <NavLink to="/chapter" className={navLink}>Start a Chapter</NavLink>
-            <NavLink to="/team" className={navLink}>Team</NavLink>
-            <NavLink to="/about" className={navLink}>Our Story</NavLink>
-            <Link
-              to="/business"
-              className="mt-2 text-center rounded px-4 py-2.5 text-xs font-mono uppercase tracking-widest text-canvas bg-gold-500 hover:bg-gold-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
+            <Wordmark />
+          </Link>
+
+          <div className="flex min-w-0 items-center justify-end">
+            <div className="hidden items-center gap-0.5 lg:flex">
+              {NAV_RIGHT.map((item) => {
+                const isActive = location.startsWith(item.to)
+                return (
+                  <Link key={item.to} href={item.to} className={navLink(isActive)}>
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+
+            <div className="ml-3 hidden items-center gap-4 lg:flex">
+              <Link href="/manual" className="whitespace-nowrap text-sm font-medium text-ink-soft transition-colors hover:text-navy-900">
+                Resources
+              </Link>
+              <Link href="/apply" className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-full bg-navy-900 px-5 text-sm font-medium text-white transition-colors hover:bg-navy-800">
+                Apply to lead
+              </Link>
+            </div>
+
+            <button
+              ref={toggleRef}
+              type="button"
+              className="grid h-[44px] w-[44px] place-items-center rounded-full text-ink-soft transition-colors hover:bg-canvas-elevated hover:text-ink lg:hidden"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              aria-expanded={isMenuOpen}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              Business Support
-            </Link>
-            <Link to="/about#donate" onClick={() => setIsMobileMenuOpen(false)} className="text-center font-mono text-xs uppercase tracking-widest text-gold-300 hover:text-gold-200">Donation preview</Link>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+                {isMenuOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+              </svg>
+            </button>
           </div>
+        </nav>
+
+        {isMenuOpen && (
+          <motion.div
+            id="mobile-menu"
+            ref={menuRef}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute left-4 right-4 top-[calc(100%+0.5rem)] flex flex-col gap-2 rounded-3xl border border-canvas-border-strong bg-white/95 p-4 shadow-2xl backdrop-blur-xl lg:hidden"
+          >
+            {NAV.map((item) => {
+              const isActive = item.to === '/' ? location === '/' : location.startsWith(item.to)
+              return (
+                <Link 
+                  key={item.to} 
+                  href={item.to} 
+                  className={`flex h-12 items-center rounded-xl px-4 text-base font-medium ${isActive ? 'bg-canvas-elevated text-navy-900' : 'text-ink'}`}
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
+            <div className="my-2 h-px bg-canvas-border" />
+            {EXTRA_NAV.map((item) => (
+              <Link
+                key={item.to}
+                href={item.to}
+                className="flex h-12 items-center rounded-xl px-4 text-base font-medium text-ink-soft"
+                onClick={closeMenu}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </motion.div>
         )}
       </header>
 
-      <main className="flex-1 flex flex-col relative z-0 w-full overflow-hidden pt-24 sm:pt-28">
-        <Outlet />
+      <main className="relative z-0 flex w-full flex-1 flex-col pt-24 sm:pt-28">
+        {children}
       </main>
 
-      <footer className="border-t border-white/5 bg-canvas-surface px-4 py-14 text-center text-sm text-ink-soft sm:py-16">
-        <div className="mx-auto flex max-w-2xl flex-col items-center">
-        <p className="font-display text-xl font-medium tracking-tight text-ink">SBI · Student Business Initiative</p>
-        <p className="mt-2 text-xs leading-relaxed text-muted">Questions about SBI or a local chapter? Use the current network contact below.</p>
-        <p className="mt-4 flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-2 break-words font-mono text-[10px] uppercase tracking-[0.12em] sm:text-xs sm:tracking-widest">
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="text-gold-400 hover:text-gold-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-sm px-1 break-all"
-          >
-            {CONTACT_EMAIL}
-          </a>
-          <span className="hidden sm:inline">&bull;</span>
-          <a
-            href="tel:+12019889390"
-            className="text-gold-400 hover:text-gold-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-sm px-1"
-          >
-            (201) 988-9390
-          </a>
-        </p>
-        <p className="mt-7 max-w-md text-xs leading-relaxed text-muted">
-          © {new Date().getFullYear()} SBI Network. Students helping local businesses grow.
-        </p>
+      <footer className="border-t border-canvas-border-strong bg-canvas-surface px-6 py-16 sm:px-8 lg:py-24">
+        <div className="mx-auto flex max-w-page flex-col gap-12 md:flex-row md:justify-between">
+          <div className="max-w-sm">
+            <Wordmark />
+            <p className="mt-6 text-body-sm leading-relaxed text-ink-soft">
+              SBI student chapters build websites, improve Google Business Profiles, and set up
+              social media for nearby businesses and community groups at no cost.
+            </p>
+          </div>
+
+          <div className="grid gap-10 sm:grid-cols-2 lg:gap-16">
+            <nav className="flex flex-col gap-4" aria-label="Footer">
+              <p className="font-mono text-label font-semibold text-navy-900 uppercase tracking-wider">Explore</p>
+              {[...NAV, ...EXTRA_NAV].map((item) => (
+                <Link
+                  key={item.to}
+                  href={item.to}
+                  className="w-fit text-sm text-ink-soft transition-colors hover:text-navy-600"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="flex flex-col gap-4">
+              <p className="font-mono text-label font-semibold text-navy-900 uppercase tracking-wider">Contact</p>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="w-fit break-all text-sm text-gold-600 transition-colors hover:text-gold-700"
+              >
+                {CONTACT_EMAIL}
+              </a>
+              <a
+                href="tel:+12019889390"
+                className="w-fit text-sm text-gold-600 transition-colors hover:text-gold-700"
+              >
+                (201) 988-9390
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-16 max-w-page border-t border-canvas-border pt-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <p className="text-sm text-ink-soft">
+            © {new Date().getFullYear()} SBI Network
+          </p>
+          <div className="flex gap-6">
+            <Link href="/about" className="text-sm text-ink-soft hover:text-navy-900">About SBI</Link>
+            <Link href="/team" className="text-sm text-ink-soft hover:text-navy-900">Team</Link>
+          </div>
         </div>
       </footer>
-      <SBIGuide />
     </div>
   )
 }

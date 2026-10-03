@@ -2,15 +2,59 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SBI Network</title>
+    <!-- viewport-fit=cover is required for env(safe-area-inset-*) to resolve to
+         anything but 0, which the sticky mobile CTA depends on. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a1020" />
+
+    <title>Start an SBI chapter in your town — SBI Network</title>
+    <meta
+      name="description"
+      content="SBI chapters are small teams of high schoolers who build websites and promo videos for local businesses, free. Two people can start one. Claim your town."
+    />
+    <link rel="canonical" href="https://sbinetwork.org/" />
+
+    <meta property="og:site_name" content="SBI Network" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sbinetwork.org/" />
+    <meta property="og:title" content="Start an SBI chapter in your town — SBI Network" />
+    <meta
+      property="og:description"
+      content="SBI chapters are small teams of high schoolers who build websites and promo videos for local businesses, free. Two people can start one. Claim your town."
+    />
+    <meta property="og:image" content="https://sbinetwork.org/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SBI Network — run a studio in your town before you graduate." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Start an SBI chapter in your town — SBI Network" />
+    <meta
+      name="twitter:description"
+      content="SBI chapters are small teams of high schoolers who build websites and promo videos for local businesses, free. Two people can start one. Claim your town."
+    />
+    <meta name="twitter:image" content="https://sbinetwork.org/og.jpg" />
+
+    <link rel="icon" type="image/jpeg" href="/sbi-logo.jpeg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Loaded non-render-blocking: the stylesheet was costing ~800ms of
+         blocked render on a throttled mobile connection. font-display:swap in
+         the Google CSS means text paints in the fallback and swaps in. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

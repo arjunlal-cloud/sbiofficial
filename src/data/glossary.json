@@ -1,19 +1,19 @@
 [
   {
     "term": "Chartered",
-    "definition": "Official recognition as an SBI chapter — grants access to HQ support and the freedom to charge for services outside your chapter's boundaries."
+    "definition": "Officially approved as an SBI chapter. Approval gives your team access to training and an assigned local service area."
   },
   {
     "term": "HQ",
-    "definition": "Headquarters — the CEO and selected executives who support chapters, set standards, and make final calls."
+    "definition": "SBI's central student support team. These students approve chapters, train new leaders, answer project questions, and review finished work."
   },
   {
     "term": "Chapter Leader",
-    "definition": "The student who founds and leads a chapter: organizes the team, keeps quality up, and communicates with HQ."
+    "definition": "The student who starts and leads a local chapter, organizes the team, communicates with businesses, and stays in contact with SBI's student support team."
   },
   {
     "term": "Coder",
-    "definition": "Team role responsible for building client websites using AI — no coding experience required."
+    "definition": "Team role responsible for building client websites using AI. No coding experience required."
   },
   {
     "term": "Cameraman",
@@ -29,26 +29,26 @@
   },
   {
     "term": "Quality Lead",
-    "definition": "HQ role that checks chapter work before it goes live to make sure it meets the organization's bar."
+    "definition": "A student support role that checks finished chapter work before a business receives it."
   },
   {
     "term": "Recruitment Lead",
-    "definition": "HQ role that responds to DMs on social media, points applicants to the site and SOP, and checks Google Form applications."
+    "definition": "A student support role that answers applicant questions and reviews chapter applications."
   },
   {
     "term": "Onboarding Lead",
-    "definition": "HQ role that sets up your chapter's social media, walks you through your responsibilities, clears up SOP questions, and recommends businesses to reach out to first."
+    "definition": "A student support role that helps an approved chapter get set up, understand its responsibilities, and choose businesses to contact first."
   },
   {
     "term": "Support Lead",
-    "definition": "HQ role chapter leaders message when they're stuck mid-project."
+    "definition": "A student support role that chapter leaders contact when they need help during a project."
   },
   {
-    "term": "Chapter Boundaries",
-    "definition": "The area around a chapter's community (decided by HQ) where all services must be free. Outside it, chapters may charge."
+    "term": "Radius",
+    "definition": "The local service area assigned to an approved chapter. Work for businesses inside this area must be free."
   },
   {
     "term": "Deactivation",
-    "definition": "Loss of official recognition — happens after missing the 2-delivered-projects-per-month target 3 months in a row (negotiable with HQ)."
+    "definition": "Losing official chapter status after missing the two-project monthly target for three months in a row. Chapter leaders should contact the student support team before that happens."
   }
 ]

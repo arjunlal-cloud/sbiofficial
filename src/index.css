@@ -1,151 +1,240 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-/*
- * SBI Network — Brand Tokens (Phase 1, dark-canvas rev)
- *
- * PALETTE — Dark navy void (Vivid+Co energy, navy/gold translation)
- * Canvas:  deep navy-black (#080d1a) — not pure black; navy-tinted dark void.
- * Primary: gold (#c09b2d) — the only warm chromatic voice. Adjust hex once
- *          final logo asset lands with a precise value.
- * Text:    cool white (#eef3ff) on dark, navy (#0a1f3d) on rare light surfaces.
- *
- * TYPOGRAPHY
- * Display: Space Grotesk — bold geometric sans. Authority via scale, not weight.
- * Body:    Inter — unchanged, excellent readability.
- * Mono:    IBM Plex Mono — eyebrow labels ("FOR BUSINESSES", stats).
- *
- * Ask SBI uses a tightly capped live Concierge; static page content remains the source of truth.
- */
+:root {
+  --sbi-ink: 11 31 58;
+  --sbi-paper: 255 255 255;
+  --sbi-blue: 45 103 167;
+  --sbi-sky: 237 245 255;
+  --sbi-rule: 215 230 247;
+  --sbi-signal: 59 141 204;
+}
 
 @theme {
-  /* ── Fonts ─────────────────────────────────────────────── */
-  --font-display: "Space Grotesk", "General Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono:    "IBM Plex Mono", Consolas, monospace;
+  --font-display: "Fraunces", ui-serif, serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* ── Canvas / surfaces (dark system) ───────────────────── */
-  --color-canvas:          #080d1a;   /* page background — deep navy-black */
-  --color-canvas-surface:  #0d1830;   /* section bands — slightly lighter */
-  --color-canvas-elevated: #132040;   /* cards, modals — elevated surface */
-  --color-canvas-border:   rgba(255,255,255,0.07);  /* hairline dividers */
-  --color-canvas-border-strong: rgba(255,255,255,0.14);
+  --color-canvas: #FFFFFF;
+  --color-canvas-surface: #FFFFFF;
+  --color-canvas-elevated: #F4F9FD;
+  --color-canvas-border: rgba(11, 31, 58, 0.10);
+  --color-canvas-border-strong: rgba(11, 31, 58, 0.18);
 
-  /* ── Navy scale (brand primary) ────────────────────────── */
-  --color-navy-950: #050b14;
-  --color-navy-900: #080d1a;   /* alias of canvas */
-  --color-navy-800: #0a1f3d;   /* rich navy — section accents */
-  --color-navy-700: #102a52;
-  --color-navy-500: #2156a0;
-  --color-navy-300: #7a9cca;   /* muted on dark */
-  --color-navy-100: #c8d8ea;
-  --color-navy-50:  #e8f0f8;
+  --color-navy-950: #061426;
+  --color-navy-900: #0B1F3A;
+  --color-navy-800: #102D50;
+  --color-navy-700: #173D68;
+  --color-navy-600: #215486;
+  --color-navy-500: #2D67A7;
+  --color-navy-400: #4D83BF;
+  --color-navy-300: #76A4D3;
+  --color-navy-100: #D7E6F7;
+  --color-navy-50: #EDF5FF;
 
-  /* ── Gold / amber (accent) ─────────────────────────────── */
-  --color-gold-700: #8a6b1a;
-  --color-gold-600: #a88220;
-  --color-gold-500: #c09b2d;   /* PRIMARY accent — buttons, underlines */
-  --color-gold-400: #d4b044;   /* hover / lighter gold */
-  --color-gold-300: #e8cb6a;   /* text gold on dark backgrounds */
-  --color-gold-200: #f2dfa0;
-  --color-gold-100: #faf4de;
+  /* Legacy utility names now resolve to SBI blue, not gold. */
+  --color-gold-700: #0B2948;
+  --color-gold-600: #10385F;
+  --color-gold-500: #3B8DCC;
+  --color-gold-400: #2F7FBD;
+  --color-gold-300: #4D98CF;
+  --color-gold-200: #9FC9E8;
+  --color-gold-100: #E6F3FC;
 
-  /* ── Ink / text ─────────────────────────────────────────── */
-  --color-ink:       #eef3ff;   /* primary text on dark canvas */
-  --color-ink-soft:  #a8bdd4;   /* secondary text */
-  --color-muted:     #6b85a8;   /* captions / metadata */
-  --color-on-light:  #0a1f3d;   /* text on rare light surfaces */
+  --color-ink: #0B1F3A;
+  --color-ink-soft: #4D6480;
+  --color-muted: #617693;
+  --color-on-light: #FFFFFF;
 
-  /* ── Semantic shortcuts ─────────────────────────────────── */
-  --color-card:   #132040;
-  --color-border: rgba(255,255,255,0.07);
+  --color-sbi-blue: #2D67A7;
 
-  /* ── Type scale (Dala/Vivid+Co approach: scale > weight) ── */
-  --text-xs:   11px;
-  --text-sm:   13px;
-  --text-base: 16px;
-  --text-lg:   18px;
-  --text-xl:   20px;
-  --text-2xl:  24px;
-  --text-3xl:  30px;
-  --text-4xl:  40px;
-  --text-5xl:  52px;
-  --text-display-sm:  72px;
-  --text-display:     96px;
-  --text-display-lg: 120px;
+  --text-display-xl: clamp(2.7rem, 6vw, 4.5rem);
+  --text-display-xl--line-height: 1.05;
+  --text-display-lg: clamp(1.85rem, 3.8vw, 2.75rem);
+  --text-display-lg--line-height: 1.1;
+  --text-display-sm: clamp(1.15rem, 1.7vw, 1.35rem);
+  --text-display-sm--line-height: 1.25;
 
-  /* Tight tracking on large type — hierarchy via scale */
-  --tracking-display:  -0.04em;
-  --tracking-heading:  -0.025em;
-  --tracking-label:     0.08em;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 1.6;
+  --text-body: 16px;
+  --text-body--line-height: 1.65;
+  --text-body-sm: 14.5px;
+  --text-body-sm--line-height: 1.6;
 
-  /* ── Spacing ─────────────────────────────────────────────── */
-  --spacing-section: 108px;
-  --spacing-block:    64px;
-  --spacing-gap:      24px;
+  --text-label: 12px;
+  --text-label--line-height: 1.5;
 
-  /* ── Border radius ───────────────────────────────────────── */
-  --radius-sm:    4px;
-  --radius-md:    8px;
-  --radius-lg:   16px;
-  --radius-xl:   24px;
+  --tracking-display: -0.01em;
+  --tracking-label: 0.08em;
+
+  --container-page: 76rem;
+  --container-measure: 62ch;
+  --container-measure-narrow: 48ch;
+  --container-head: 18ch;
+  --container-head-lg: 24ch;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6.5rem;
 }
 
 body {
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: 1.6;
+  font-size: var(--text-body);
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
+/* SBI's original soft blue edge light, paired with the connected-node hero. */
+.reference-glow {
+  background:
+    radial-gradient(38% 82% at -4% 48%, rgba(79, 164, 230, 0.42), transparent 72%),
+    radial-gradient(38% 82% at 104% 46%, rgba(120, 197, 245, 0.38), transparent 72%),
+    radial-gradient(42% 40% at 50% 100%, rgba(213, 236, 252, 0.58), transparent 82%),
+    linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 58%, #F3F9FF 100%);
+}
+
+.reference-glow::after {
+  content: none;
+}
+
+/* Institutional Network Motif */
 .network-grid {
   background-image:
-    linear-gradient(rgba(192,155,45,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(192,155,45,0.08) 1px, transparent 1px),
-    radial-gradient(circle at 20% 35%, rgba(192,155,45,0.2) 0 1px, transparent 2px);
-  background-size: 72px 72px, 72px 72px, 180px 180px;
-  mask-image: radial-gradient(ellipse at center, black, transparent 75%);
+    linear-gradient(rgba(23, 61, 104, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 61, 104, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 80%);
 }
 
-/* Leaflet — dark brand */
-.leaflet-popup-content-wrapper {
-  background: #132040;
-  color: #eef3ff;
-  border-radius: 12px;
-  box-shadow: 0 16px 48px -8px rgba(0,0,0,0.6);
-  font-family: var(--font-body);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.leaflet-popup-tip {
-  background: #132040;
-}
-.leaflet-container {
-  font-family: var(--font-body);
-  background: #0d1830;
-}
-.leaflet-tile-pane {
-  filter: brightness(0.75) saturate(0.6) hue-rotate(200deg);
+.beam-line {
+  position: relative;
+  height: 1px;
+  background: rgba(11, 31, 58, 0.16);
 }
 
-/* Hide default cursor on pointer-fine devices (custom cursor active) */
-@media (pointer: fine) {
-  *, *::before, *::after {
-    cursor: none !important;
-  }
+/* Restrained motion */
+.sweep-in {
+  background-image: linear-gradient(100deg,
+    currentColor 0%, currentColor 38%,
+    var(--color-navy-500) 50%,
+    currentColor 62%, currentColor 100%);
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: sweep 1.5s var(--ease-expo) 0.15s both;
+}
+@keyframes sweep {
+  from { background-position: 130% 0; }
+  to   { background-position: -30% 0; }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(45, 103, 167, 0.05);
+  border-radius: var(--radius-md);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(45, 103, 167, 0.08) 45%,
+    rgba(118, 164, 211, 0.05) 55%,
+    transparent
+  );
+  animation: skeleton-sweep 1.8s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  100% { transform: translateX(100%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .skeleton::after { display: none; }
+}
+
+.rule-fade {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(11, 31, 58, 0.15), transparent);
+}
+
+.focus-gold:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+.leaflet-popup-content-wrapper {
+  background: #ffffff;
+  color: #0B1F3A;
+  border-radius: 8px;
+  box-shadow: 0 12px 32px -8px rgba(28, 36, 51, 0.15);
+  font-family: var(--font-body);
+  border: 1px solid rgba(28, 36, 51, 0.1);
+}
+.leaflet-popup-tip { background: #ffffff; }
+.leaflet-container { font-family: var(--font-body); background: #F4F9FD; }
+.leaflet-control-attribution {
+  background: rgba(255,255,255,0.9) !important;
+  color: #4D6480 !important;
+}
+.leaflet-control-attribution a { color: #2D67A7 !important; }
+
+.leaflet-control-zoom { margin-top: 3.6rem !important; border: none !important; }
+.leaflet-control-zoom a {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #1C2433 !important;
+  border-color: rgba(11, 31, 58, 0.15) !important;
+  backdrop-filter: blur(4px);
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(244, 249, 253, 0.98) !important;
+  color: #0B1F3A !important;
+}
+.leaflet-bar { box-shadow: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
+
+.section-y-lg { padding-block: clamp(4.5rem, 8vw, 7.5rem); }
+.section-y    { padding-block: clamp(3rem, 5vw, 5rem); }
+.section-y-sm { padding-block: clamp(1.5rem, 2vw, 2rem); }
+
+@media (max-width: 639px) {
+  body.has-sticky-cta footer {
+    padding-bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+.hero-h { min-height: min(80svh, 48rem); }
