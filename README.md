@@ -31,6 +31,8 @@ These are implementation claims for the current draft, not final release approva
 
 - Configure email delivery only after SBI verifies a sender address on an SBI-owned domain and sets `SBI_RESEND_FROM_EMAIL`. `GET /api/forms/status` currently returns `{"ready":false}`; do not use another organization's sender domain.
 - Confirm the submission recipient, delivery workflow, and what happens when email delivery fails. The current public inbox is not an approved sender address.
+- Verify real delivery rather than relying only on the readiness flag, which currently checks whether a sender is configured. The delivery code uses the Replit Connectors SDK; another hosting environment needs a supported connector context or an approved replacement adapter.
+- Decide whether submissions must be stored as well as emailed, with an approved retention policy. Current rate limiting is in memory and also needs review for a multi-instance production service.
 - Approve privacy, data-retention, and follow-up disclosures before collecting real submissions. Test successful delivery, validation errors, and failure states end to end.
 - Keep the supplied external form fallback visible until the professional forms are confirmed to deliver reliably.
 
@@ -43,8 +45,9 @@ These are implementation claims for the current draft, not final release approva
 
 ### Repository handoff and release
 
-- The requested GitHub destination is `https://github.com/arjunlal-cloud/sbiofficial`. The `main` branch is being replaced with this pnpm workspace; its previous commits remain in history, but the previous standalone site's files and Vercel SPA configuration will no longer be at the branch tip.
+- The GitHub destination is `https://github.com/arjunlal-cloud/sbiofficial`. Its `main` branch now contains this pnpm workspace. Previous commits remain in history, but the previous standalone site's files and Vercel SPA configuration are no longer at the branch tip.
 - Production hosting is not configured or verified for this workspace. Reassess the deployment build and API hosting before relying on Vercel or another production host; do not assume the old Vercel setup still applies.
+- Make contributor setup portable: the workspace dependency overrides are currently Linux-x64-specific, and a standalone local frontend/API proxy is not configured. Verify macOS/Windows installation and document a complete non-Replit development setup.
 - Keep temporary manuals, internal agent notes, migration backups, and generated output out of the public repository.
 - Complete final regression checks and SBI approval before treating the site as production-ready.
 
@@ -69,17 +72,27 @@ The form pages use the generated API client and the API server's `/api/forms/sta
 
 ## Run and verify
 
+The current workspace was checked with Node.js 24.13.0 and pnpm 10.26.1 on Linux x64. Use Replit or a matching Linux environment until the portability task above is addressed; the dependency overrides currently exclude other platforms' native binaries.
+
 ```sh
 pnpm install --frozen-lockfile
-pnpm --filter @workspace/figma-design run dev
-pnpm --filter @workspace/figma-design run check
-pnpm --filter @workspace/figma-design run build
+PORT=5000 pnpm --filter @workspace/figma-design run dev
 ```
 
 Run the API in a second terminal when testing form submission:
 
 ```sh
-pnpm --filter @workspace/api-server run dev
+PORT=3001 pnpm --filter @workspace/api-server run dev
+```
+
+Outside Replit, these commands start separate services but do not connect them automatically. The frontend uses same-origin `/api/...` URLs, so configure a dev/reverse proxy from `/api` to the API on port 3001 before testing forms through the UI. Real email delivery also requires the connector setup described above.
+
+Checks:
+
+```sh
+pnpm --filter @workspace/figma-design run check
+pnpm --filter @workspace/figma-design run build
+pnpm --filter @workspace/api-server run typecheck
 ```
 
 The configured Replit workflows are `artifacts/figma-design: web` and `artifacts/api-server: API Server`.
