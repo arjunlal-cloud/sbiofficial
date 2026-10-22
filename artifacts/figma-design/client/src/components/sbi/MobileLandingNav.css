@@ -1,0 +1,63 @@
+.sbi-mobile-landing-nav {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  display: grid;
+  width: min(calc(100vw - 20px), 460px);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  padding: 6px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(8, 12, 18, .88);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, .28);
+  color: white;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  animation: sbi-nav-enter .2s ease-out both;
+}
+
+.sbi-mobile-landing-nav a {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, .9);
+  font: 600 11px/1.15 'Instrument Sans', 'Outfit', sans-serif;
+  text-align: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sbi-mobile-landing-nav a:hover,
+.sbi-mobile-landing-nav a:focus-visible {
+  background: rgba(255, 255, 255, .12);
+  color: white;
+}
+
+.sbi-mobile-landing-nav a:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.sbi-mobile-landing-nav a:last-child {
+  background: #1470cb;
+  color: white;
+}
+
+@keyframes sbi-nav-enter {
+  from { opacity: 0; translate: 0 8px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@media (min-width: 1024px) {
+  .sbi-mobile-landing-nav { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sbi-mobile-landing-nav { animation: none; }
+}

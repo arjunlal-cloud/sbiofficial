@@ -1,0 +1,17 @@
+.sbi-f-instrument-sans-medium { font-family: 'Instrument Sans', sans-serif; font-weight: 500; font-style: normal; }
+.sbi-f-instrument-sans-regular { font-family: 'Instrument Sans', sans-serif; font-weight: 400; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-light { font-family: 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif; font-weight: 300; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-medium { font-family: 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif; font-weight: 500; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-regular { font-family: 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif; font-weight: 400; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-thin { font-family: 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif; font-weight: 100; font-style: normal; }
+.sbi-f-origin-medium-display { font-family: 'Origin', 'Fraunces', serif; font-weight: 500; font-style: normal; }
+.sbi-f-mooxy-regular { font-family: 'mooxy-Regular', 'mooxy', 'Outfit', sans-serif; font-weight: 400; font-style: normal; }
+.sbi-shadow { text-shadow: 4px 4px 10.3px rgba(0, 0, 0, 0.23); }
+
+/* The authored footer wrapper spans the frame before its visible content arrives.
+   Keep that transparent wrapper from intercepting the hero, while retaining its controls. */
+[data-testid="scene-canvas"] [data-node-id="179:216"] { pointer-events: none; }
+[data-testid="scene-canvas"] [data-node-id="179:216"] button,
+[data-testid="scene-canvas"] [data-node-id="179:216"] a { pointer-events: auto; }
+[data-testid="scene-canvas"] button:focus-visible,
+[data-testid="scene-canvas"] a:focus-visible { outline: 3px solid white; outline-offset: 5px; }

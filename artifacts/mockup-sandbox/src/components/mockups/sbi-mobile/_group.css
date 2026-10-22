@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Outfit:wght@100;300;400;500&family=Fraunces:wght@500&display=swap");
+
+@font-face {
+  font-family: "mooxy-Regular";
+  src: local("mooxy-Regular");
+}
+
+@font-face {
+  font-family: "MADE Okine Sans PERSONAL USE";
+  src: local("MADE Okine Sans PERSONAL USE"), local("MADE Okine Sans");
+}
+
+@font-face {
+  font-family: "Origin";
+  src: local("Origin");
+}
+
+.sbi-f-instrument-sans-medium { font-family: "Instrument Sans", sans-serif; font-weight: 500; font-style: normal; }
+.sbi-f-instrument-sans-regular { font-family: "Instrument Sans", sans-serif; font-weight: 400; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-light { font-family: "MADE Okine Sans PERSONAL USE", "Outfit", sans-serif; font-weight: 300; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-medium { font-family: "MADE Okine Sans PERSONAL USE", "Outfit", sans-serif; font-weight: 500; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-regular { font-family: "MADE Okine Sans PERSONAL USE", "Outfit", sans-serif; font-weight: 400; font-style: normal; }
+.sbi-f-made-okine-sans-personal-use-thin { font-family: "MADE Okine Sans PERSONAL USE", "Outfit", sans-serif; font-weight: 100; font-style: normal; }
+.sbi-f-origin-medium-display { font-family: "Origin", "Fraunces", serif; font-weight: 500; font-style: normal; }
+.sbi-f-mooxy-regular { font-family: "mooxy-Regular", "mooxy", "Outfit", sans-serif; font-weight: 400; font-style: normal; }
+.sbi-shadow { text-shadow: 4px 4px 10.3px rgba(0, 0, 0, 0.23); }
+
+html, body, #root { margin: 0; min-height: 100%; }
+.sbi-mobile-preview { min-height: 100dvh; overflow: hidden; background: #000; color: #fff; }

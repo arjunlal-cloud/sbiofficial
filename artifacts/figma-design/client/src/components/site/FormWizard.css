@@ -1,0 +1,349 @@
+.fw-root {
+  --fw-line: rgba(17, 21, 27, .13);
+  --fw-muted: #66717c;
+  padding-block: clamp(48px, 7vw, 92px) clamp(72px, 9vw, 124px);
+}
+
+.fw-heading {
+  max-width: 850px;
+  margin-bottom: clamp(32px, 5vw, 58px);
+}
+
+.fw-heading h1 {
+  max-width: 820px;
+  margin: 0;
+  color: var(--site-ink);
+  font: 400 clamp(42px, 6.4vw, 78px)/1.04 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif;
+  letter-spacing: -.045em;
+  overflow-wrap: anywhere;
+}
+
+.fw-intro {
+  max-width: 690px;
+  margin: 22px 0 0;
+  color: var(--fw-muted);
+  font-size: clamp(16px, 1.5vw, 19px);
+  line-height: 1.7;
+}
+
+.fw-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, .68fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: clamp(18px, 3vw, 34px);
+}
+
+.fw-progress-panel {
+  position: sticky;
+  top: 100px;
+  padding: clamp(20px, 2.6vw, 30px);
+  border-radius: 20px;
+}
+
+.fw-progress-copy {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fw-step-label {
+  color: var(--fw-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.fw-progress-copy strong {
+  color: var(--site-blue);
+  font: 500 24px/1 'Instrument Sans', sans-serif;
+  letter-spacing: -.04em;
+}
+
+.fw-progress-track {
+  height: 6px;
+  margin: 18px 0 26px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #dce5ed;
+}
+
+.fw-progress-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--site-blue);
+  transform-origin: left center;
+  transition: transform .35s ease;
+}
+
+.fw-step-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fw-step-item {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  color: #737d86;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.fw-step-marker {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  border: 1px solid rgba(17, 21, 27, .17);
+  border-radius: 50%;
+  color: #66717c;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .015em;
+}
+
+.fw-step-item.current {
+  color: var(--site-ink);
+  font-weight: 700;
+}
+
+.fw-step-item.current .fw-step-marker {
+  border-color: var(--site-blue);
+  background: var(--site-blue);
+  color: white;
+}
+
+.fw-step-item.complete .fw-step-marker {
+  border-color: #c5dff5;
+  background: #e5f1fb;
+  color: var(--site-blue-deep);
+}
+
+.fw-review-item {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--fw-line);
+}
+
+.fw-review-item .fw-step-marker { font-size: 15px; }
+
+.fw-sidebar-note {
+  display: flex;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--fw-line);
+}
+
+.fw-note-mark {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e2eaf1;
+  color: #43596d;
+  font: 700 12px/1 'Instrument Sans', sans-serif;
+}
+
+.fw-sidebar-note p {
+  margin: 0;
+  color: var(--fw-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.fw-main { min-width: 0; }
+
+.fw-configuration-notice {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 16px 20px;
+  border: 1px solid #d6a74b;
+  border-radius: 14px;
+  background: #fff7e8;
+  color: #593c0c;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.fw-configuration-notice strong { font-size: 15px; }
+
+.fw-form, .fw-result {
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: 22px;
+}
+
+.fw-form-heading { margin-bottom: 32px; }
+
+.fw-form-kicker, .fw-review-index {
+  margin: 0 0 12px;
+  color: var(--site-blue);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.fw-form-kicker span { padding-inline: 5px; color: #a5afb8; }
+
+.fw-form-heading h2, .fw-result h2 {
+  margin: 0;
+  color: var(--site-ink);
+  font: 400 clamp(28px, 3.8vw, 42px)/1.12 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+
+.fw-form-heading > p:last-child {
+  margin: 14px 0 0;
+  color: var(--fw-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.fw-fields { display: grid; gap: 24px; }
+.fw-field { display: grid; gap: 9px; }
+.fw-label, .fw-checkbox-label { color: var(--site-ink); font-size: 14px; font-weight: 700; line-height: 1.45; }
+.fw-required { color: var(--site-blue); }
+
+.fw-field input:not([type="checkbox"]), .fw-field textarea, .fw-field select {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 15px;
+  border: 1px solid rgba(17, 21, 27, .2);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--site-ink);
+  font: inherit;
+  font-size: 15px;
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+
+.fw-field textarea { min-height: 132px; resize: vertical; }
+.fw-field select { cursor: pointer; }
+.fw-field input::placeholder, .fw-field textarea::placeholder { color: #8a949d; }
+.fw-field input:focus, .fw-field textarea:focus, .fw-field select:focus {
+  outline: none;
+  border-color: var(--site-blue);
+  box-shadow: 0 0 0 3px rgba(20, 112, 203, .13);
+}
+
+.fw-field [aria-invalid="true"] { border-color: #a64335 !important; }
+.fw-help { margin: 0; color: var(--fw-muted); font-size: 12px; line-height: 1.55; }
+.fw-field-error { margin: 0; color: #973b2f; font-size: 13px; line-height: 1.45; }
+.fw-field-checkbox { gap: 7px; }
+.fw-checkbox-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.fw-checkbox-label input {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  margin: 1px 0 0;
+  accent-color: var(--site-blue);
+}
+.fw-checkbox-label input:focus-visible { outline: 3px solid rgba(20, 112, 203, .4); outline-offset: 3px; }
+.fw-field-checkbox .fw-help, .fw-field-checkbox .fw-field-error { margin-left: 31px; }
+
+.fw-validation-summary, .fw-submit-error {
+  display: grid;
+  gap: 4px;
+  margin: -12px 0 22px;
+  padding: 13px 15px;
+  border-left: 3px solid #a64335;
+  background: #fff0ed;
+  color: #762c23;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.fw-submit-error { margin: 24px 0 0; }
+.fw-review-sections { border-top: 1px solid var(--fw-line); }
+.fw-review-section { padding: 22px 0 24px; border-bottom: 1px solid var(--fw-line); }
+.fw-review-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.fw-review-index { display: block; margin-bottom: 7px; font-size: 10px; }
+.fw-review-heading h3 { margin: 0; color: var(--site-ink); font: 400 22px/1.25 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif; }
+.fw-edit-button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid rgba(17, 21, 27, .2);
+  border-radius: 99px;
+  background: transparent;
+  color: var(--site-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.fw-edit-button:hover { border-color: var(--site-blue); color: var(--site-blue); }
+.fw-review-answers { display: grid; gap: 0; margin: 18px 0 0; }
+.fw-answer-row { display: grid; grid-template-columns: minmax(110px, .65fr) minmax(0, 1.35fr); gap: 18px; padding: 11px 0; border-top: 1px solid rgba(17, 21, 27, .07); }
+.fw-answer-row dt { color: var(--fw-muted); font-size: 13px; line-height: 1.55; }
+.fw-answer-row dd { margin: 0; color: var(--site-ink); font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; white-space: pre-wrap; }
+
+.fw-submit-note { display: grid; gap: 8px; margin-top: 22px; }
+.fw-submit-note p { margin: 0; color: var(--fw-muted); font-size: 13px; line-height: 1.6; }
+.fw-submit-note a { width: fit-content; color: var(--site-blue-deep); font-size: 13px; font-weight: 700; text-underline-offset: 3px; }
+.fw-actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--fw-line); }
+.fw-actions .sbi-button { min-width: 132px; cursor: pointer; font: inherit; font-weight: 700; }
+.fw-actions .fw-next { margin-left: auto; }
+.fw-actions button:disabled { cursor: wait; opacity: .7; transform: none; }
+.fw-actions .fw-back { gap: 10px; }
+.fw-button-pulse { width: 9px; height: 9px; border-radius: 50%; background: currentColor; animation: fw-pulse 1s ease-in-out infinite alternate; }
+@keyframes fw-pulse { to { opacity: .3; transform: scale(.7); } }
+
+.fw-result { text-align: left; }
+.fw-result-mark {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e2f0fb;
+  color: var(--site-blue-deep);
+  font-size: 23px;
+  font-weight: 700;
+}
+.fw-result > p:last-child { margin: 15px 0 0; color: var(--fw-muted); line-height: 1.65; }
+.fw-empty { display: grid; justify-items: start; gap: 16px; }
+.fw-empty h1 { margin: 0; font: 400 clamp(32px, 5vw, 56px)/1.08 'MADE Okine Sans PERSONAL USE', 'Outfit', sans-serif; }
+.fw-empty p:not(.sbi-eyebrow) { margin: 0 0 8px; color: var(--fw-muted); }
+
+@media (max-width: 760px) {
+  .fw-root { padding-top: 38px; }
+  .fw-layout { grid-template-columns: minmax(0, 1fr); }
+  .fw-progress-panel { position: static; padding: 18px; }
+  .fw-step-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 10px; }
+  .fw-step-item { min-height: 40px; gap: 8px; font-size: 12px; }
+  .fw-step-marker { width: 27px; height: 27px; flex-basis: 27px; }
+  .fw-review-item { margin-top: 0; padding-top: 0; border-top: 0; }
+  .fw-sidebar-note { margin-top: 18px; padding-top: 14px; }
+}
+
+@media (max-width: 460px) {
+  .fw-heading { margin-bottom: 26px; }
+  .fw-form, .fw-result { padding: 22px 18px; }
+  .fw-step-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fw-step-item { min-height: 34px; }
+  .fw-answer-row { grid-template-columns: 1fr; gap: 3px; }
+  .fw-actions { margin-top: 26px; }
+  .fw-actions .sbi-button { min-width: 0; flex: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fw-root *, .fw-root *::before, .fw-root *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

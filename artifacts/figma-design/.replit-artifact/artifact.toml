@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "SBI Digital Agency"
+description = "The SBI digital-agency landing page from Figma, connecting student talent with local businesses through a full visual frontend preview."
+version = "1.0.0"
+id = "artifacts/figma-design"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24154
+
+[services.development]
+run = "pnpm --filter @workspace/figma-design run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/figma-design", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/figma-design/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24154"
+BASE_PATH = "/"
